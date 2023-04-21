@@ -1,0 +1,34 @@
+[
+    {
+        "id": "hitachi",
+        "name": "Hitachi"
+    },
+    {
+        "id": "panasonic",
+        "name": "Panasonic"
+    },
+    {
+        "id": "samsung",
+        "name": "Samsung"
+    },
+    {
+        "id": "toshiba",
+        "name": "Toshiba"
+    },
+    {
+        "id": "tcl",
+        "name": "TCL"
+    },
+    {
+        "id": "sony",
+        "name": "Sony"
+    },
+    {
+        "id": "lg",
+        "name": "LG"
+    },
+    {
+        "id": "karofi",
+        "name": "Karofi"
+    }
+]
