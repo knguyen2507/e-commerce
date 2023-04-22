@@ -24,9 +24,20 @@ const getProductById = async (req, res) => {
         code, metadata, message
     });
 };
+// get product by id
+const searchProduct = async (req, res) => {
+    const key = req.body.key;
+    console.log(`body:::`, req.body);
+    const {code, metadata, message} = await search_product({key});
+    
+    return res.status(code).json({
+        code, metadata, message
+    });
+};
 
 // export module
 module.exports = {
     getAllProducts,
-    getProductById
+    getProductById,
+    searchProduct
 }
