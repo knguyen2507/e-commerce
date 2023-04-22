@@ -8,7 +8,7 @@ const { getData } = require('../utils');
 // get all users
 const get_all_users = async () => {
     const users = await _User.find({});
-    if (!users) {
+    if (users.length === 0) {
         return {
             code: 500,
             message: "Internal Server Error"

@@ -2,15 +2,14 @@ import Navigation from "../components/Navigation.js";
 import Footer from "../components/Footer.js";
 import Title from "../components/Title.js";
 import { useState, useEffect } from "react";
-import { GetAllProducts } from '../services/productAPI.js';
+import { GetProductsByCategories } from "../services/categoryAPI.js";
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from "react-bootstrap/Col";
+import Nav from 'react-bootstrap/Nav';
 
-const title = "Refrigerator";
-
-function Category () {
-    document.title = title.toUpperCase();
+function Category (props) {
+    document.title = props.title.toUpperCase();
 
     const itemImage = {
         width: "300px", 
@@ -29,25 +28,25 @@ function Category () {
     const [products, getProducts] = useState([]);
     
     useEffect(() => {
-        const getAllProducts = async () => {
-            const products = await GetAllProducts();
+        const getProductsByCategories = async () => {
+            const products = await GetProductsByCategories({category: props.idTitle});
             getProducts(products);
         }
-        getAllProducts();
+        getProductsByCategories();
     }, [])
 
     return (
         <>
             <Navigation />
-            <Title title={title} />
+            <Title title={props.title} />
             <Container>
                 <Row md={3}>
                 {products.map(product => (
                     <Col style={{marginTop: "25px", marginBottom: "25px"}}>
                         <div style={itemImage}>
-                            <a href="#">
-                                <img width="300" height="300" src={'../images/' + product.idCategory + '/' + product.id + '.jpg'}></img>
-                            </a>
+                            <Nav.Link href={"/product/" + product.id} >
+                                <img width="300" height="300" src={'../../images/' + product.idCategory + '/' + product.id + '.jpg'}></img>
+                            </Nav.Link>
                         </div>
                         <div style={itemInfo}>
                             <p>{product.name}</p>
@@ -56,7 +55,7 @@ function Category () {
                 ))}
                 </Row>
             </Container>
-            <Footer />
+            <Footer brands={props.brands} categories={props.categories} />
         </>
     );
 }

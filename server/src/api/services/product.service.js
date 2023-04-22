@@ -3,7 +3,6 @@
 // models
 const _Product = require('../models/product.model');
 // utils
-const { getData } = require('../utils');
 
 // get all products
 const get_all_products = async () => {
@@ -20,9 +19,26 @@ const get_all_products = async () => {
             products
         }
     }
-}
+};
+// get product by id
+const get_product_by_id = async ({id}) => {
+    const product = await _Product.findOne({id});
+    if (!product) {
+        return {
+            code: 401,
+            message: "Product not exist in database!"
+        }
+    }
+    return {
+        code: 200,
+        metadata: {
+            product
+        }
+    }
+};
 
 // export module
 module.exports = {
-    get_all_products
+    get_all_products,
+    get_product_by_id
 }

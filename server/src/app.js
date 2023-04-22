@@ -7,10 +7,12 @@ const compression = require('compression');
 const { default: helmet } = require('helmet');
 const cors = require('cors');
 const db = require('./database/init.mongodb');
+const bodyParser = require('body-parser');
 // routes
 const userRouter = require('./api/routes/user.router');
 const productRouter = require('./api/routes/product.router');
 const categoryRouter = require('./api/routes/category.router');
+const brandRouter = require('./api/routes/brand.router');
 
 const app = express();
 // init middlewares
@@ -18,15 +20,16 @@ app.use(cors());
 app.use(compression());
 app.use(morgan("dev"));
 app.use(helmet());
-app.use(express.json());
+//app.use(express.json());
+app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 // databases
 db;
 // init routes
-app.get('/', (req, res) => { res.send("<h1>HOME PAGE</h1>") });
 app.use('/user', userRouter);
 app.use('/product', productRouter);
 app.use('/category', categoryRouter);
+app.use('/brand', brandRouter);
 // handling error
 app.use((req, res, next) => {
     next(createError.NotFound('This route does not exist!'));

@@ -1,0 +1,23 @@
+[33mcommit 073733d9e4fc779989d3280c1859a935491417a7[m[33m ([m[1;36mHEAD -> [m[1;32mnode-server[m[33m, [m[1;32mrecover-branch[m[33m)[m
+Author: kngyen2507 <ntknguyen2507@gmail.com>
+Date:   Fri Apr 21 15:14:32 2023 +0700
+
+    init mongodb, database
+
+[33mcommit 178b3e86968bdd17fbcc318b64dfe27f4a19637d[m[33m ([m[1;31morigin/node-client[m[33m, [m[1;32mnode-client[m[33m)[m
+Author: kngyen2507 <ntknguyen2507@gmail.com>
+Date:   Mon Apr 17 19:34:09 2023 +0700
+
+    init client
+
+[33mcommit d2c4e8cd4a842ccf5e565e07a422321e871dda8a[m[33m ([m[1;31morigin/node-server[m[33m)[m
+Author: kngyen2507 <ntknguyen2507@gmail.com>
+Date:   Mon Apr 17 19:19:56 2023 +0700
+
+    init server
+
+[33mcommit 76f4f1d33346f1c0fd956f92acafc7fbcbe010a3[m[33m ([m[1;31morigin/add-readme[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32madd-readme[m[33m)[m
+Author: kngyen2507 <ntknguyen2507@gmail.com>
+Date:   Sun Apr 16 12:53:27 2023 +0700
+
+    add README.md

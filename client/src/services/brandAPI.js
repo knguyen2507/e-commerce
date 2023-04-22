@@ -1,17 +1,17 @@
 const host = 'http://localhost:5505'
 
-const GetAllCategories = async () => {
-    const path = '/category/get-all-categories';
+const GetAllBrands = async () => {
+    const path = '/brand/get-all-brands';
     const url = host + path;
 
     const response = await fetch(url);
     const res = await response.json();
 
-    return res.metadata.categories;
+    return res.metadata.brands;
 }
 
-const GetProductsByCategories = async ({category}) => {
-    const path = `/category/${category}/products`;
+const GetProductsByBrands = async ({brand}) => {
+    const path = `/brand/${brand}/products`;
     const url = host + path;
 
     const response = await fetch(url, {method: "POST"});
@@ -21,6 +21,6 @@ const GetProductsByCategories = async ({category}) => {
 }
 
 export { 
-    GetAllCategories,
-    GetProductsByCategories
+    GetAllBrands,
+    GetProductsByBrands
 }

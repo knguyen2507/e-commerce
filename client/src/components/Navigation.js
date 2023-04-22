@@ -13,7 +13,7 @@ function Navigation () {
         <Navbar bg="dark" variant="dark">
             <Container>
                 <Nav className="me-auto">
-                    <Nav.Link href="#home" ><p style={tag_p} className="font-weight-bold fs-4">Home</p></Nav.Link>
+                    <Nav.Link href="/" ><p style={tag_p} className="font-weight-bold fs-4">Home</p></Nav.Link>
                 </Nav>
                 <Form className="d-flex">
                     <Form.Control

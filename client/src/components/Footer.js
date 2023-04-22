@@ -1,22 +1,16 @@
 import React from 'react';
 import { MDBFooter, MDBContainer, MDBRow, MDBCol, MDBIcon } from 'mdb-react-ui-kit';
-import { GetAllCategories } from '../services/categoryAPI.js';
-import { useState, useEffect } from "react";
+import Nav from 'react-bootstrap/Nav';
 
-export default function Footer() {
-    const [categories, getCategories] = useState([]);
-    
-    useEffect(() => {
-        const getAllCategories = async () => {
-            const categories = await GetAllCategories();
-            getCategories(categories);
-        }
-        getAllCategories();
-    }, [])
-
+export default function Footer(props) {
     return (
         <MDBFooter bgColor='light' className='text-center text-lg-start text-muted'>
             <section className='d-flex justify-content-center justify-content-lg-between p-4 border-bottom'>
+                {props.brands.map(brand => (
+                    <Nav.Link href={"/brand/"+brand.id+"/products"} >
+                        <img width="120" height="50" src={window.location.origin + '/images/brand/' + brand.id + '.jpg'}></img>
+                    </Nav.Link>
+                ))}
             </section>
 
             <section className=''>
@@ -33,10 +27,12 @@ export default function Footer() {
                             </p>
                         </MDBCol>
 
-                        <MDBCol md='2' lg='2' xl='2' className='mx-auto mb-4'>
+                        <MDBCol md='4' lg='4' xl='3' className='mx-auto mb-4'>
                             <h6 className='text-uppercase fw-bold mb-4'>CATEGORIES</h6>
-                            {categories.map(category => (
-                                <p><a href={category.id} className='text-reset'>{category.name}</a></p>
+                            {props.categories.map(category => (
+                                <Nav.Link href={'/category/'+category.id+'/products'} >
+                                    <p>{category.name}</p>
+                                </Nav.Link>
                             ))}
                         </MDBCol>
 
