@@ -8,11 +8,14 @@ const {
     searchProduct
 } = require('../controllers/product.controller');
 // middlewares
+const {
+    checkSearchProduct
+} = require('../middlewares/product.middleware');
 
 const router = express.Router();
 
 router.get('/get-all-products', getAllProducts);
-router.post('/search', searchProduct);
+router.post('/search', [checkSearchProduct], searchProduct);
 router.post('/:id', getProductById);
 
 // export module

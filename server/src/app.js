@@ -8,6 +8,7 @@ const { default: helmet } = require('helmet');
 const cors = require('cors');
 const db = require('./database/init.mongodb');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 // routes
 const userRouter = require('./api/routes/user.router');
 const productRouter = require('./api/routes/product.router');
@@ -20,9 +21,9 @@ app.use(cors());
 app.use(compression());
 app.use(morgan("dev"));
 app.use(helmet());
-//app.use(express.json());
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 // databases
 db;
 // init routes
