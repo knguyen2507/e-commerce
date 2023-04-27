@@ -19,7 +19,7 @@ export default function Footer(props) {
                         <MDBCol md='3' lg='4' xl='3' className='mx-auto mb-4'>
                             <h6 className='text-uppercase fw-bold mb-4'>
                                 <MDBIcon color='secondary' icon='gem' className='me-3' />
-                                KHOI NGUYEN E-COMMERCE
+                                KHOI NGUYEN STORE
                             </h6>
                             <p>
                                 Here you can use rows and columns to organize your footer content. Lorem ipsum dolor sit

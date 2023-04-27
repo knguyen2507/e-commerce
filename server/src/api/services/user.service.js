@@ -33,6 +33,25 @@ const get_all_users = async () => {
         }
     }
 };
+// get user by id
+const get_user_by_id = async ({id}) => {
+    const user = await _User.findOne({id});
+    if (!user) {
+        return {
+            code: 500,
+            message: "Internal Server Error"
+        }
+    }
+    return {
+        code: 200,
+        metadata: {
+            user: getData({
+                    fields: ['_id', 'name', 'email'],
+                    object: user
+                })
+        }
+    }
+};
 // login
 const login = async ({us, pwd}) => {
     // find user by username
@@ -87,6 +106,7 @@ const logout = ({ id }) => {
 // export module
 module.exports = {
     get_all_users,
+    get_user_by_id,
     login,
     logout
 }

@@ -11,7 +11,7 @@ const {
 
 const router = express.Router();
 router.get('/get-all-brands', getAllBrands)
-router.post('/:brand/products', getProductByBrand);
+router.get('/:brand/products', getProductByBrand);
 
 // export module
 module.exports = router;

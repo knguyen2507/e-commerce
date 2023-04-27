@@ -11,6 +11,6 @@ const {
 const router = express.Router();
 
 router.get('/get-all-categories', getAllCategories);
-router.post('/:category/products', getProductByCategory);
+router.get('/:category/products', getProductByCategory);
 
 module.exports = router;

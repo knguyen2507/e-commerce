@@ -36,8 +36,8 @@ app.use((req, res, next) => {
     next(createError.NotFound('This route does not exist!'));
 });
 app.use((err, req, res, next) => {
-    res.json({
-        status: err.status || 500,
+    res.status(err.status || 500).json({
+        code: err.status || 500,
         message: err.message
     })
 })

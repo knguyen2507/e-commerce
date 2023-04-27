@@ -2,6 +2,7 @@
 
 const JWT = require("jsonwebtoken");
 const createError = require('http-errors');
+const client = require('../../database/init.redis');
 // Models
 const _User = require('../models/user.model');
 
@@ -9,7 +10,7 @@ const _User = require('../models/user.model');
 const verifyAccessToken = async (req, res, next) => {
     // get authorization header
     const authHeader = req.headers["authorization"];
-    const idUser = req.body.idUser;
+    console.log(`authorization:::`, authHeader);
 
     if (!authHeader) {
         return next(createError.Forbidden('You need sign in!'));
@@ -30,17 +31,43 @@ const verifyAccessToken = async (req, res, next) => {
             }
             return next(createError.Unauthorized(err.message));
         }
-
-        if (idUser !== decoded.id) {
-            return next(createError.Unauthorized("You don't have permission to access"));
+        if (req.params.id !== decoded.id) {
+            return next(createError.Unauthorized());
         }
+
         req.user_id = decoded.id;
         next();
     });
 };
 
+const verifyRefreshToken = async (req, res, next) => {
+    const refreshToken = req.body.refreshToken;
+    if(!refreshToken) return createError.BadRequest();
+
+    // verify refresh token
+    JWT.verify(refreshToken, process.env.SECRET_REFRESH_TOKEN, (err, decoded) => {
+        if (err) {
+            if (err.name === 'JsonWebTokenError') {
+                return next(createError.Unauthorized());
+            }
+            return next(createError.Unauthorized(err.message));
+        }
+        client.get(decoded.id, (err, reply) => {
+            if (err) return next(createError.InternalServerError())
+            
+            if (refreshToken !== reply) {
+                next(createError.Unauthorized());
+            }
+
+            req.payload = decoded;
+            next();
+        })
+        
+    });
+}
 
 // export module
 module.exports = {
-    verifyAccessToken
+    verifyAccessToken,
+    verifyRefreshToken
 };
