@@ -6,7 +6,8 @@ const {
     get_all_users,
     get_user_by_id,
     login,
-    logout
+    logout,
+    sign_up_guest
 } = require('../services/user.service');
 const {
     signAccessToken
@@ -62,6 +63,15 @@ const logOut = async (req, res) => {
         code, message
     })
 };
+// register guest account
+const signUpGuest = async (req, res) => {
+    const { name, username, password, email } = req.body;
+    const { code, message, metadata } = await sign_up_guest({name, username, password, email});
+
+    return res.status(code).json({
+        code, message, metadata
+    })
+};
 
 // export module
 module.exports = {
@@ -69,5 +79,6 @@ module.exports = {
     getUserById,
     logIn,
     refreshToken,
-    logOut
+    logOut,
+    signUpGuest
 }

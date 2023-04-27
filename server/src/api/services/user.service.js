@@ -90,16 +90,35 @@ const login = async ({us, pwd}) => {
 };
 // Log out
 const logout = ({ id }) => {
-    try {
-        // delete in redis
-        client.del(id.toString());
-        
-        return {
-            code: 201,
-            message: `Logout Successfully!`
-        }
-    } catch (error) {
-        console.log(error);
+    // delete in redis
+    client.del(id.toString());
+    
+    return {
+        code: 201,
+        message: `Logout Successfully!`
+    }
+};
+// register guest account
+const sign_up_guest = async ({
+    name, username, password, email
+}) => {
+    // hash password
+    const hashPw = await bcrypt.hash(password, 10);
+
+    const newUser = {
+        name: name,
+        username: username,
+        password: hashPw,
+        email: email,
+        role: "Guest"
+    }
+
+    const user = await _User.create(newUser);
+
+    return {
+        code: 201,
+        message: "Your account has been successfully created",
+        metadata: user
     }
 };
 
@@ -108,5 +127,6 @@ module.exports = {
     get_all_users,
     get_user_by_id,
     login,
-    logout
+    logout,
+    sign_up_guest
 }

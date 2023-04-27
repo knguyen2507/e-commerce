@@ -7,11 +7,13 @@ const {
     getUserById,
     logIn,
     refreshToken,
-    logOut 
+    logOut,
+    signUpGuest 
 } = require('../controllers/user.controller');
 // middlewares
 const {
-    checkLogin
+    checkLogin,
+    checkRegister
 } = require('../middlewares/user.middleware');
 const { 
     verifyAccessToken,
@@ -21,10 +23,11 @@ const {
 const router = express.Router();
 
 router.get('/get-all-users', getAllUsers);
-router.get('/:id', [verifyAccessToken], getUserById);
 router.post('/login', [checkLogin], logIn);
 router.post('/refresh-token', [verifyRefreshToken], refreshToken);
 router.delete('/logout', [verifyRefreshToken], logOut);
+router.post('/register', [checkRegister], signUpGuest);
+router.get('/:id', [verifyAccessToken], getUserById);
 
 // export module
 module.exports = router;

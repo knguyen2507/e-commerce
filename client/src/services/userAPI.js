@@ -75,11 +75,39 @@ const RefreshToken = async () => {
     const res = response.data;
     
     return res.accessToken;
-}
+};
+
+const Register = async (username, password, email, name, re_password) => {
+    const path = '/user/register';
+    const url = host + path;
+
+    const payload = {
+        username: username, 
+        password: password,
+        email: email,
+        name: name,
+        re_password: re_password
+    };
+
+    try {
+        const response = await axios.post(url, payload, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
+        const res = response.data;
+    
+        return res.metadata;
+    } catch (error) {
+        return error.response.data;
+    }
+    
+};
 
 export {
     GetUserById,
     Login,
     LogOut,
-    RefreshToken
+    RefreshToken,
+    Register
 }
