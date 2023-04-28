@@ -8,6 +8,7 @@ import {
     RefreshToken 
 } from '../services/userAPI.js';
 import { useState, useEffect } from "react";
+import Cookies from 'js-cookie';
 
 const title = "User Information";
 
@@ -28,10 +29,20 @@ function User (props) {
                 setErrorMsg(res.message);
             }
             else if (res.code === 401 && res.message === 'jwt expired') {
-                const accessToken = await RefreshToken();
-                localStorage.setItem('accessToken', accessToken);
-                const response = await GetUserById({id});
-                if (response.user) setInfo(response.user);
+                const res = await RefreshToken();
+                if (res.code >= 400) {
+                    setErrorMsg(res.message);
+                    localStorage.removeItem('accessToken');
+                    localStorage.removeItem('idUser');
+                    localStorage.removeItem('nameUser');
+                    localStorage.removeItem('role');
+                    Cookies.remove('refreshToken');
+                } else {
+                    const accessToken = res.accessToken;
+                    localStorage.setItem('accessToken', accessToken);
+                    const response = await GetUserById({id});
+                    setInfo(response.user);
+                }
             } else {
                 setInfo(res.user);
             }

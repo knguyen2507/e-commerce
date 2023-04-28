@@ -36,9 +36,26 @@ const get_product_by_category = async ({idCategory}) => {
         }
     }
 };
+// get category by name 
+const get_category_by_name = async ({id}) => {
+    const category = await _Category.findOne({id});
+    if (!category) {
+        return {
+            code: 401,
+            message: "Category not exist in database!"
+        }
+    }
+    return {
+        code: 200,
+        metadata: {
+            category
+        }
+    }
+}
 
 // export module
 module.exports = {
     get_all_categories,
-    get_product_by_category
+    get_product_by_category,
+    get_category_by_name
 };

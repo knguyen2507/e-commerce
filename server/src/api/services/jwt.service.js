@@ -3,6 +3,8 @@
 const JWT = require('jsonwebtoken');
 const createError = require('http-errors');
 const client = require('../../database/init.redis');
+// models
+const _User = require('../models/user.model');
 
 // create access token
 const signAccessToken = async (id) => {
@@ -34,8 +36,29 @@ const signRefreshToken = async (id) => {
         })
     })
 };
+// check role admin
+const check_access_role_admin = async (id) => {
+    const user = await _User.findOne({_id: id});
+    if (!user) {
+        return {
+            code: 500,
+            message: "Internal Server Error"
+        }
+    }
+    if (user.role !== 'Admin') {
+        return {
+            code: 401,
+            message: "You don't have Access"
+        }
+    }
+    return {
+        code: 200,
+        message: "OK"
+    }
+};
 
 module.exports = {
     signAccessToken,
-    signRefreshToken
+    signRefreshToken,
+    check_access_role_admin
 };

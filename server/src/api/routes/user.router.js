@@ -6,10 +6,13 @@ const {
     getAllUsers,
     getUserById,
     logIn,
-    refreshToken,
     logOut,
     signUpGuest 
 } = require('../controllers/user.controller');
+const {
+    refreshToken,
+    checkAccessRoleAdmin
+} =require('../controllers/jwt.controller');
 // middlewares
 const {
     checkLogin,
@@ -28,6 +31,7 @@ router.post('/refresh-token', [verifyRefreshToken], refreshToken);
 router.delete('/logout', [verifyRefreshToken], logOut);
 router.post('/register', [checkRegister], signUpGuest);
 router.get('/:id', [verifyAccessToken], getUserById);
+router.post('/check-access-admin-page', [verifyAccessToken], checkAccessRoleAdmin);
 
 // export module
 module.exports = router;

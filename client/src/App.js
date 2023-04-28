@@ -16,6 +16,8 @@ import Signup from './pages/Signup.js';
 import Search from './pages/Search.js';
 import Logout from './pages/Logout.js';
 import User from './pages/User.js';
+import Admin from './pages/Admin.js';
+import NotFound from './pages/NotFound.js';
 // call api
 import { GetAllBrands } from './services/brandAPI';
 import { GetAllCategories } from './services/categoryAPI';
@@ -67,15 +69,11 @@ function App() {
           <Route path='/register' element={<Signup brands={brands} categories={categories} />} />
           <Route path='/product/search' element={<Search brands={brands} categories={categories} />} />
           <Route path='/logout' element={<Logout brands={brands} categories={categories} />} />
-          {categories.map(category => (
-            <Route path={'/category/'+category.id+'/products'} element={<Category title={category.name} idTitle={category.id} brands={brands} categories={categories} />} />
-          ))}
-          {brands.map(brand => (
-            <Route path={'/brand/'+brand.id+'/products'} element={<Brand title={brand.name} idTitle={brand.id} brands={brands} categories={categories} />} />
-          ))}
-          {products.map(product => (
-            <Route path={'/product/'+product.id} element={<Product product={product} brands={brands} categories={categories} />} />
-          ))}
+          <Route path='/admin-page' element={<Admin />} />
+          <Route path={'/category/:id/products'} element={<Category brands={brands} categories={categories} />} />
+          <Route path={'/brand/:id/products'} element={<Brand brands={brands} categories={categories} />} />
+          <Route path={'/product/:id'} element={<Product brands={brands} categories={categories} />} />
+          <Route path='*' element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </ErrorBoundary>

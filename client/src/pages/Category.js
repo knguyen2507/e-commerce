@@ -2,14 +2,18 @@ import Navigation from "../components/Navigation.js";
 import Footer from "../components/Footer.js";
 import Title from "../components/Title.js";
 import { useState, useEffect } from "react";
-import { GetProductsByCategories } from "../services/categoryAPI.js";
+import { 
+    GetProductsByCategories,
+    GetCategoryByName 
+} from "../services/categoryAPI.js";
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from "react-bootstrap/Col";
 import Nav from 'react-bootstrap/Nav';
+import { useParams } from "react-router-dom";
 
 function Category (props) {
-    document.title = props.title.toUpperCase();
+    const {id} = useParams();
 
     const itemImage = {
         width: "300px", 
@@ -25,27 +29,38 @@ function Category (props) {
         textTransform: "uppercase"
     };
 
-    const [products, getProducts] = useState([]);
-    
+    const [category, setCategory] = useState([]);
+    const [products, setProducts] = useState([]);
+
+    useEffect(() => {
+        const getCategoryByName = async () => {
+            const category = await GetCategoryByName({id});
+            setCategory(category);
+        }
+        getCategoryByName();
+    }, [])
     useEffect(() => {
         const getProductsByCategories = async () => {
-            const products = await GetProductsByCategories({category: props.idTitle});
-            getProducts(products);
+            const products = await GetProductsByCategories({category: id});
+            setProducts(products);
         }
         getProductsByCategories();
     }, [])
 
+    const title = category.name || 'KHOI NGUYEN STORE';
+    document.title = title.toUpperCase();
+
     return (
         <>
             <Navigation />
-            <Title title={props.title} />
+            <Title title={title} /> 
             <Container>
                 <Row md={3}>
                 {products.map(product => (
                     <Col style={{marginTop: "25px", marginBottom: "25px"}}>
                         <div style={itemImage}>
                             <Nav.Link href={"/product/" + product.id} >
-                                <img width="300" height="300" src={'../../images/' + product.idCategory + '/' + product.id + '.jpg'}></img>
+                                <img width="300" height="300" src={'../../images/' + category.id + '/' + product.id + '.jpg'}></img>
                             </Nav.Link>
                         </div>
                         <div style={itemInfo}>

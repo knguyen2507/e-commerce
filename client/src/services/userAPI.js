@@ -50,14 +50,18 @@ const LogOut = async () => {
     const url = host + path;
 
     const payload = {refreshToken: refreshToken};
-    const response = await axios.delete(url, {
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        data: payload
-    });
-
-    return response;
+    try {
+        const response = await axios.delete(url, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: payload
+        });
+    
+        return response.data;
+    } catch (error) {
+        return error.response.data
+    }
 };
 
 const RefreshToken = async () => {
@@ -66,15 +70,19 @@ const RefreshToken = async () => {
     const url = host + path;
 
     const payload = {refreshToken: refreshToken};
-    const response = await axios.post(url, payload, {
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    });
-
-    const res = response.data;
+    try {
+        const response = await axios.post(url, payload, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
     
-    return res.accessToken;
+        const res = response.data;
+        
+        return res;
+    } catch (error) {
+        return error.response.data
+    }
 };
 
 const Register = async (username, password, email, name, re_password) => {
@@ -104,10 +112,32 @@ const Register = async (username, password, email, name, re_password) => {
     
 };
 
+const CheckAccessAdminPage = async () => {
+    const path = `/user/check-access-admin-page`;
+    const url = host + path;
+    const token = localStorage.getItem('accessToken');
+    const id = localStorage.getItem('idUser');
+
+    try {
+        const response = await axios.post(url, {id: id}, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        });
+        const res = response.data;
+    
+        return res;
+    } catch (error) {
+        return error.response.data;
+    }
+};
+
 export {
     GetUserById,
     Login,
     LogOut,
     RefreshToken,
-    Register
+    Register,
+    CheckAccessAdminPage
 }

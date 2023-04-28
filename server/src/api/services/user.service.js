@@ -26,7 +26,7 @@ const get_all_users = async () => {
         metadata: {
             users: users.map(user => (
                 getData({
-                    fields: ['_id', 'name', 'email'],
+                    fields: ['_id', 'name', 'email', 'role'],
                     object: user
                 })
             ))
@@ -35,7 +35,7 @@ const get_all_users = async () => {
 };
 // get user by id
 const get_user_by_id = async ({id}) => {
-    const user = await _User.findOne({id});
+    const user = await _User.findOne({_id: id});
     if (!user) {
         return {
             code: 500,
@@ -78,7 +78,7 @@ const login = async ({us, pwd}) => {
         code: 200,
         metadata: {
             user: getData({
-                fields: ['_id', 'name'],
+                fields: ['_id', 'name', 'role'],
                 object: user
             }),
             refreshToken,

@@ -2,14 +2,18 @@ import Navigation from "../components/Navigation.js";
 import Footer from "../components/Footer.js";
 import Title from "../components/Title.js";
 import { useState, useEffect } from "react";
-import { GetProductsByBrands } from "../services/brandAPI.js";
+import { 
+    GetProductsByBrands,
+    GetBrandByName 
+} from "../services/brandAPI.js";
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from "react-bootstrap/Col";
 import Nav from 'react-bootstrap/Nav';
+import { useParams } from "react-router-dom";
 
 function Brand (props) {
-    document.title = props.title.toUpperCase();
+    const {id} = useParams();
 
     const itemImage = {
         width: "300px", 
@@ -25,22 +29,32 @@ function Brand (props) {
         textTransform: "uppercase"
     };
 
-    const [products, getProducts] = useState([]);
+    const [brand, setBrand] = useState([]);
+    const [products, setProducts] = useState([]);
     
     useEffect(() => {
+        const getBrandByName = async () => {
+            const brand = await GetBrandByName({id});
+            setBrand(brand);
+        }
+        getBrandByName();
+    }, [])
+
+    useEffect(() => {
         const getProductsByBrands = async () => {
-            const products = await GetProductsByBrands({brand: props.idTitle});
-            getProducts(products);
+            const products = await GetProductsByBrands({brand: id});
+            setProducts(products);
         }
         getProductsByBrands();
     }, [])
 
-    console.log(`products:::`, products);
+    const title = brand.name || 'KHOI NGUYEN STORE';
+    document.title = title.toUpperCase();
 
     return (
         <>
             <Navigation />
-            <Title title={props.title} />
+            <Title title={title} />
             <Container>
                 <Row md={3}>
                 {console.log(`products:::`, products)}

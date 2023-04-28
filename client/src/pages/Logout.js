@@ -16,13 +16,21 @@ function Logout (props) {
     useEffect(() => {
         const logout = async () => {
             const res = await LogOut();
-            if (res.data.code < 400) {
+            if (res.code >= 400) {
                 localStorage.removeItem('accessToken');
                 localStorage.removeItem('idUser');
                 localStorage.removeItem('nameUser');
-                Cookies.remove('refreshToken')
+                localStorage.removeItem('role');
+                Cookies.remove('refreshToken');
             }
-            setMsg(res.data.message);
+            if (res.code < 400) {
+                localStorage.removeItem('accessToken');
+                localStorage.removeItem('idUser');
+                localStorage.removeItem('nameUser');
+                localStorage.removeItem('role');
+                Cookies.remove('refreshToken');
+            }
+            setMsg(res.message);
         }
         logout();
     }, []) 

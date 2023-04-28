@@ -22,7 +22,18 @@ const GetProductsByBrands = async ({brand}) => {
     return res.metadata.products;
 }
 
+const GetBrandByName = async ({id}) => {
+    const path = `/brand/${id}`;
+    const url = host + path;
+
+    const response = await axios.get(url);
+    const res = response.data;
+
+    return res.metadata.brand;
+}
+
 export { 
     GetAllBrands,
-    GetProductsByBrands
+    GetProductsByBrands,
+    GetBrandByName
 }

@@ -9,9 +9,7 @@ const {
     logout,
     sign_up_guest
 } = require('../services/user.service');
-const {
-    signAccessToken
-} = require('../services/jwt.service');
+
 // get all users
 const getAllUsers = async (req, res) => {
     const {code, metadata, message} = await get_all_users({});
@@ -22,7 +20,12 @@ const getAllUsers = async (req, res) => {
 };
 // get user by id
 const getUserById = async (req, res) => {
-    const id = req.user_id
+    const id = req.params.id;
+    if (id !== req.user_id) {
+        return res.status(401).json({
+            code: 401, message: "You don't have Access"
+        })
+    }; 
     const {code, metadata, message} = await get_user_by_id({id});
 
     return res.status(code).json({
@@ -45,15 +48,6 @@ const logIn = async (req, res) => {
         code, metadata, message
     })
 };
-// get new access token
-const refreshToken = async (req, res) => {
-    const id = req.payload.id;
-
-    const accessToken = await signAccessToken(id);
-        return res.json({ 
-            accessToken
-         });
-}
 // Log out
 const logOut = async (req, res) => {
     const id = req.payload.id;
@@ -78,7 +72,6 @@ module.exports = {
     getAllUsers,
     getUserById,
     logIn,
-    refreshToken,
     logOut,
     signUpGuest
 }

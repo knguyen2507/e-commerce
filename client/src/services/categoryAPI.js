@@ -22,7 +22,18 @@ const GetProductsByCategories = async ({category}) => {
     return res.metadata.products;
 }
 
+const GetCategoryByName = async ({id}) => {
+    const path = `/category/${id}`;
+    const url = host + path;
+
+    const response = await axios.get(url);
+    const res = response.data;
+
+    return res.metadata.category;
+};
+
 export { 
     GetAllCategories,
-    GetProductsByCategories
+    GetProductsByCategories,
+    GetCategoryByName
 }

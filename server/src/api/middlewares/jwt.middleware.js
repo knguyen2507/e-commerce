@@ -10,7 +10,6 @@ const _User = require('../models/user.model');
 const verifyAccessToken = async (req, res, next) => {
     // get authorization header
     const authHeader = req.headers["authorization"];
-    console.log(`authorization:::`, authHeader);
 
     if (!authHeader) {
         return next(createError.Forbidden('You need sign in!'));
@@ -30,9 +29,6 @@ const verifyAccessToken = async (req, res, next) => {
                 return next(createError.Unauthorized());
             }
             return next(createError.Unauthorized(err.message));
-        }
-        if (req.params.id !== decoded.id) {
-            return next(createError.Unauthorized());
         }
 
         req.user_id = decoded.id;

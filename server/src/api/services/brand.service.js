@@ -46,9 +46,26 @@ const get_product_by_brand = async ({idBrand}) => {
         }
     }
 };
+// get brand by name
+const get_brand_by_name = async ({id}) => {
+    const brand = await _Brand.findOne({id});
+    if (!brand) {
+        return {
+            code: 401,
+            message: "Brand not exist in database!"
+        }
+    }
+    return {
+        code: 200,
+        metadata: {
+            brand
+        }
+    }
+}
 
 // export module
 module.exports = {
     get_all_brands,
-    get_product_by_brand
+    get_product_by_brand,
+    get_brand_by_name
 }

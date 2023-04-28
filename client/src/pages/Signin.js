@@ -29,6 +29,7 @@ function Signin (props) {
             localStorage.setItem('accessToken', res.accessToken);
             localStorage.setItem('nameUser', res.user.name);
             localStorage.setItem('idUser', res.user._id);
+            localStorage.setItem('role', res.user.role);
             Cookies.set('refreshToken', res.refreshToken);
             window.location.href = '/';
         }
