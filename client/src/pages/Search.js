@@ -11,7 +11,7 @@ import {useLocation} from 'react-router-dom';
 
 const title = "SEARCH PAGE";
 
-function Search (props) {
+function Search () {
     document.title = title;
     const location = useLocation();
 
@@ -22,8 +22,8 @@ function Search (props) {
 
     useEffect(() => {
         const searchProducts = async (key) => {
-            const products = await SearchProducts(key);
-            setProducts(products);
+            const res = await SearchProducts(key);
+            setProducts(res.products);
         }
         searchProducts(key);
     }, [])
@@ -40,7 +40,7 @@ function Search (props) {
         textAlign: "center",
         color: "black",
         textTransform: "uppercase"
-    };  
+    }; 
 
     return (
         <>
@@ -52,7 +52,13 @@ function Search (props) {
                     <Col style={{marginTop: "25px", marginBottom: "25px"}}>
                         <div style={itemImage}>
                             <Nav.Link href={"/product/" + product.id} >
-                                <img width="300" height="300" src={window.location.origin + '/images/' + product.idCategory + '/' + product.id + '.jpg'}></img>
+                                <img 
+                                    width="300" 
+                                    height="300" 
+                                    crossorigin="anonymous"
+                                    src={process.env.REACT_APP_HOST + '/' + product.image} 
+                                    alt="image product"
+                                ></img>
                             </Nav.Link>
                         </div>
                         <div style={itemInfo}>
@@ -62,7 +68,7 @@ function Search (props) {
                 ))}
                 </Row>
             </Container>
-            <Footer brands={props.brands} categories={props.categories} />
+            <Footer />
         </>
     );
 }

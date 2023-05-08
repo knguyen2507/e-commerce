@@ -19,33 +19,15 @@ import User from './pages/User.js';
 import Admin from './pages/Admin.js';
 import NotFound from './pages/NotFound.js';
 // call api
-import { GetAllBrands } from './services/brandAPI';
-import { GetAllCategories } from './services/categoryAPI';
 import { GetAllProducts } from './services/productAPI.js';
 
 function App() {
-  const [brands, getBrands] = useState([]);
-  const [categories, getCategories] = useState([]);
-  const [products, getProducts] = useState([]);
-    
-  useEffect(() => {
-      const getAllBrands = async () => {
-          const brands = await GetAllBrands();
-          getBrands(brands);
-      }
-      getAllBrands();
-  }, [])
-  useEffect(() => {
-    const getAllCategories = async () => {
-        const categories = await GetAllCategories();
-        getCategories(categories);
-    }
-    getAllCategories();
-  }, [])
+  const [products, setProducts] = useState([]);
+
   useEffect(() => {
     const getAllProducts = async () => {
         const products = await GetAllProducts();
-        getProducts(products);
+        setProducts(products);
     }
     getAllProducts();
   }, [])
@@ -63,16 +45,16 @@ function App() {
     <ErrorBoundary FallbackComponent={ErrorHandler}>
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={<Home products={products} brands={brands} categories={categories} />} />
-          <Route path='/user/:id' element={<User brands={brands} categories={categories} />} />
-          <Route path='/login' element={<Signin brands={brands} categories={categories} />} />
-          <Route path='/register' element={<Signup brands={brands} categories={categories} />} />
-          <Route path='/product/search' element={<Search brands={brands} categories={categories} />} />
-          <Route path='/logout' element={<Logout brands={brands} categories={categories} />} />
+          <Route path='/' element={<Home products={products} />} />
+          <Route path='/user/:id' element={<User />} />
+          <Route path='/login' element={<Signin />} />
+          <Route path='/register' element={<Signup />} />
+          <Route path='/product/search' element={<Search />} />
+          <Route path='/logout' element={<Logout />} />
           <Route path='/admin-page' element={<Admin />} />
-          <Route path={'/category/:id/products'} element={<Category brands={brands} categories={categories} />} />
-          <Route path={'/brand/:id/products'} element={<Brand brands={brands} categories={categories} />} />
-          <Route path={'/product/:id'} element={<Product brands={brands} categories={categories} />} />
+          <Route path={'/category/:id/products'} element={<Category />} />
+          <Route path={'/brand/:id/products'} element={<Brand />} />
+          <Route path={'/product/:id'} element={<Product />} />
           <Route path='*' element={<NotFound />} />
         </Routes>
       </BrowserRouter>

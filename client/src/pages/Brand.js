@@ -12,7 +12,7 @@ import Col from "react-bootstrap/Col";
 import Nav from 'react-bootstrap/Nav';
 import { useParams } from "react-router-dom";
 
-function Brand (props) {
+function Brand () {
     const {id} = useParams();
 
     const itemImage = {
@@ -62,7 +62,13 @@ function Brand (props) {
                     <Col style={{marginTop: "25px", marginBottom: "25px"}}>
                         <div style={itemImage}>
                             <Nav.Link href={"/product/" + product.id} >
-                                <img width="300" height="300" src={'../../images/' + product.idCategory + '/' + product.id + '.jpg'}></img>
+                                <img 
+                                    width="300" 
+                                    height="300" 
+                                    crossorigin="anonymous"
+                                    src={process.env.REACT_APP_HOST + '/' + product.image} 
+                                    alt='image product'
+                                ></img>
                             </Nav.Link>
                         </div>
                         <div style={itemInfo}>
@@ -72,7 +78,7 @@ function Brand (props) {
                 ))}
                 </Row>
             </Container>
-            <Footer brands={props.brands} categories={props.categories} />
+            <Footer />
         </>
     );
 }

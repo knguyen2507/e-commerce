@@ -19,6 +19,12 @@ function Navigation () {
         }
     };
 
+    const handleKeyPress = (event) => {
+        if(event.key === 'Enter') {
+            searchProducts();
+        }
+    };
+
     return (
         <Navbar bg="dark" variant="dark">
             <Container>
@@ -34,6 +40,7 @@ function Navigation () {
                         className="me-2"
                         aria-label="Search"
                         onChange={e => setKey(e.target.value)}
+                        onKeyPress={handleKeyPress}
                     />
                     <Button variant="light" size="sm" onClick={searchProducts}>SEARCH</Button>
                 </Form>

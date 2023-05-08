@@ -1,5 +1,6 @@
 'use strict'
 
+const fs = require('fs-extra');
 // models
 const _Product = require('../models/product.model');
 // utils
@@ -36,7 +37,6 @@ const get_product_by_id = async ({id}) => {
         }
     }
 };
-
 // find products
 const search_product = async ({key}) => {
     const keys = key.split(' ');
@@ -76,10 +76,52 @@ const search_product = async ({key}) => {
         message: "Successfully"
     }
 }
+// create new product
+const create_product = async ({id, name, qty, category, brand, price, image, details}) => {
+    const newProduct = {
+        id, name, qty, category, brand, price, image, details
+    };
+
+    const product = await _Product.create(newProduct);
+
+    return {
+        code: 201,
+        message: "Product has been successfully created"
+    }
+};
+// update product
+const update_product = async ({id, qty, price}) => {
+    const product = await _Product.updateOne({id}, {$set: {qty, price}});
+
+    return {
+        code: 201,
+        message: "Product updated Successfully!",
+        metadata: product
+    }
+};
+// delete product
+const delete_product = async ({id}) => {
+    const product = await _Product.findOne({id});
+    if (!product) {
+        return {
+            code: 500,
+            message: "Internal Server Error"
+        }
+    }
+    await _Product.deleteOne({id});
+    await fs.remove(`public/${product.image}`);
+    return {
+        code: 201,
+        message: "Product delete Successfully!"
+    }
+}
 
 // export module
 module.exports = {
     get_all_products,
     get_product_by_id,
-    search_product
+    search_product,
+    create_product,
+    update_product,
+    delete_product
 }

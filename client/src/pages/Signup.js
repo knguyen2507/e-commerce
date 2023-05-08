@@ -7,7 +7,7 @@ import { Register } from "../services/userAPI.js";
 
 const title = "Register Page";
 
-function Signup (props) {
+function Signup () {
     document.title = title.toUpperCase();
 
     const [errStatus, setErrStatus] = useState(false);
@@ -164,7 +164,7 @@ function Signup (props) {
                 </div>
                 {errStatus ? ErrorMessage() : (status ? SuccessMessage() : true)}
             </Container>
-            <Footer brands={props.brands} categories={props.categories} />
+            <Footer />
         </>
     )
 }

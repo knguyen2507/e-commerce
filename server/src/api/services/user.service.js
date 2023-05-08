@@ -26,7 +26,7 @@ const get_all_users = async () => {
         metadata: {
             users: users.map(user => (
                 getData({
-                    fields: ['_id', 'name', 'email', 'role'],
+                    fields: ['_id', 'name', 'email', 'role', 'username'],
                     object: user
                 })
             ))
@@ -46,7 +46,7 @@ const get_user_by_id = async ({id}) => {
         code: 200,
         metadata: {
             user: getData({
-                    fields: ['_id', 'name', 'email'],
+                    fields: ['_id', 'name', 'email', 'role'],
                     object: user
                 })
         }
@@ -121,6 +121,46 @@ const sign_up_guest = async ({
         metadata: user
     }
 };
+// create user by admin rights
+const create_user_by_admin = async ({
+    name, username, password, email, role
+}) => {
+    // hash password
+    const hashPw = await bcrypt.hash(password, 10);
+
+    const newUser = {
+        name: name,
+        username: username,
+        password: hashPw,
+        email: email,
+        role: role
+    }
+
+    const user = await _User.create(newUser);
+
+    return {
+        code: 201,
+        message: "Your account has been successfully created",
+        metadata: user
+    }
+};
+// delete user
+const delete_user = async ({id}) => {
+    const user = await _User.findOne({_id: id});
+    if (!user) {
+        return {
+            code: 500,
+            message: "Internal Server Error"
+        }
+    }
+
+    await _User.deleteOne({_id: id});
+    client.del(id.toString());
+    return {
+        code: 201,
+        message: "User delete Successfully!"
+    }
+};
 
 // export module
 module.exports = {
@@ -128,5 +168,7 @@ module.exports = {
     get_user_by_id,
     login,
     logout,
-    sign_up_guest
+    sign_up_guest,
+    create_user_by_admin,
+    delete_user
 }

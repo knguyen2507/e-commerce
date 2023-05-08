@@ -4,7 +4,9 @@
 const { 
     get_all_categories,
     get_product_by_category,
-    get_category_by_name 
+    get_category_by_name,
+    create_category,
+    delete_category 
 } = require('../services/category.service');
 
 // get all categories
@@ -33,10 +35,30 @@ const getCategoryByName = async (req, res) => {
         code, metadata, message
     })
 }
+// create new category
+const createCategory = async (req, res) => {
+    const {id, name} = req.body;
+    const {code, message} = await create_category({id, name});
+
+    return res.status(code).json({
+        code, message
+    })
+};
+// delete category
+const deleteCategory = async (req, res) => {
+    const id = req.params.id;
+    const {code, message} = await delete_category({id});
+
+    return res.status(code).json({
+        code, message
+    })
+};
 
 // export module
 module.exports = {
     getAllCategories,
     getProductByCategory,
-    getCategoryByName
+    getCategoryByName,
+    createCategory,
+    deleteCategory
 }

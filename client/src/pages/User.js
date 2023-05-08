@@ -12,7 +12,7 @@ import Cookies from 'js-cookie';
 
 const title = "User Information";
 
-function User (props) {
+function User () {
     document.title = title.toUpperCase();
 
     const {id} = useParams();
@@ -64,7 +64,7 @@ function User (props) {
                     {<p>{info.name}</p>}
                 </Row>
             </Container>
-            <Footer brands={props.brands} categories={props.categories} />
+            <Footer />
         </>
     )
 }

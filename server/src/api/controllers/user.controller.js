@@ -7,7 +7,9 @@ const {
     get_user_by_id,
     login,
     logout,
-    sign_up_guest
+    sign_up_guest,
+    create_user_by_admin,
+    delete_user
 } = require('../services/user.service');
 
 // get all users
@@ -66,6 +68,30 @@ const signUpGuest = async (req, res) => {
         code, message, metadata
     })
 };
+// create user by admin rights
+const createUserByAdmin = async (req, res) => {
+    const {
+        name, username, password, email, role
+    } = req.body;
+    const { 
+        code, message, metadata 
+    } = await create_user_by_admin({name, username, password, email, role});
+
+    return res.status(code).json({
+        code, message, metadata
+    })
+
+};
+// delete user
+const deleteUser = async (req, res) => {
+    const id = req.params.id;
+
+    const { code, message } = await delete_user({id});
+
+    return res.status(code).json({
+        code, message
+    })
+}
 
 // export module
 module.exports = {
@@ -73,5 +99,7 @@ module.exports = {
     getUserById,
     logIn,
     logOut,
-    signUpGuest
+    signUpGuest,
+    createUserByAdmin,
+    deleteUser
 }

@@ -22,7 +22,8 @@ app.use(compression());
 app.use(morgan("dev"));
 app.use(helmet());
 app.use(bodyParser.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static('public'));
 app.use(cookieParser());
 // databases
 db;

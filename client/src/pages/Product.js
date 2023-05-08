@@ -11,7 +11,7 @@ import {
 
 const title = "Product";
 
-function Product (props) {
+function Product () {
     const {id} = useParams();
     const [product, setProduct] = useState([]);
 
@@ -91,7 +91,13 @@ function Product (props) {
                 <Row style={{marginTop: "25px", marginBottom: "25px"}}>
                     <Col sm={4}>
                         <div style={itemImage}>
-                            <img width="300" height="300" src={'../images/' + product.idCategory + '/' + product.id + '.jpg'}></img>
+                            <img 
+                                width="300" 
+                                height="300" 
+                                crossorigin="anonymous"
+                                src={process.env.REACT_APP_HOST + '/' + product.image} 
+                                alt="image product"
+                            ></img>
                         </div>
                     </Col>
                     <Col sm={8}>
@@ -105,7 +111,7 @@ function Product (props) {
                     </Col>
                 </Row>
             </Container>
-            <Footer brands={props.brands} categories={props.categories} />
+            <Footer />
         </>
     )
 }

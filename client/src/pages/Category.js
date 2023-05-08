@@ -4,7 +4,7 @@ import Title from "../components/Title.js";
 import { useState, useEffect } from "react";
 import { 
     GetProductsByCategories,
-    GetCategoryByName 
+    GetCategoryById 
 } from "../services/categoryAPI.js";
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -12,7 +12,7 @@ import Col from "react-bootstrap/Col";
 import Nav from 'react-bootstrap/Nav';
 import { useParams } from "react-router-dom";
 
-function Category (props) {
+function Category () {
     const {id} = useParams();
 
     const itemImage = {
@@ -33,11 +33,11 @@ function Category (props) {
     const [products, setProducts] = useState([]);
 
     useEffect(() => {
-        const getCategoryByName = async () => {
-            const category = await GetCategoryByName({id});
+        const GetCategoryById = async () => {
+            const category = await GetCategoryById({id});
             setCategory(category);
         }
-        getCategoryByName();
+        GetCategoryById();
     }, [])
     useEffect(() => {
         const getProductsByCategories = async () => {
@@ -60,7 +60,13 @@ function Category (props) {
                     <Col style={{marginTop: "25px", marginBottom: "25px"}}>
                         <div style={itemImage}>
                             <Nav.Link href={"/product/" + product.id} >
-                                <img width="300" height="300" src={'../../images/' + category.id + '/' + product.id + '.jpg'}></img>
+                                <img 
+                                    width="300" 
+                                    height="300" 
+                                    crossorigin="anonymous"
+                                    src={process.env.REACT_APP_HOST + '/' + product.image} 
+                                    alt="image product"
+                                ></img>
                             </Nav.Link>
                         </div>
                         <div style={itemInfo}>
@@ -70,7 +76,7 @@ function Category (props) {
                 ))}
                 </Row>
             </Container>
-            <Footer brands={props.brands} categories={props.categories} />
+            <Footer />
         </>
     );
 }

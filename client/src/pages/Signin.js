@@ -8,7 +8,7 @@ import Cookies from 'js-cookie';
 
 const title = "Login Page";
 
-function Signin (props) {
+function Signin () {
     document.title = title.toUpperCase();
 
     const [errStatus, setErrStatus] = useState(false);
@@ -30,7 +30,9 @@ function Signin (props) {
             localStorage.setItem('nameUser', res.user.name);
             localStorage.setItem('idUser', res.user._id);
             localStorage.setItem('role', res.user.role);
-            Cookies.set('refreshToken', res.refreshToken);
+            Cookies.set('refreshToken', res.refreshToken, {
+                expires: 365
+            });
             window.location.href = '/';
         }
     };
@@ -119,7 +121,7 @@ function Signin (props) {
                 </div>
                 {errStatus && ErrorMessage()}
             </Container>
-            <Footer brands={props.brands} categories={props.categories} />
+            <Footer />
         </>
     )
 }

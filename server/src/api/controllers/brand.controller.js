@@ -4,7 +4,9 @@
 const { 
     get_all_brands ,
     get_product_by_brand,
-    get_brand_by_name
+    get_brand_by_name,
+    create_brand,
+    delete_brand
 } = require('../services/brand.service');
 
 // get all brands
@@ -33,10 +35,32 @@ const getBrandByName = async (req, res) => {
         code, metadata, message
     })
 };
+// create new brand
+const createBrand = async (req, res) => {
+    const {id, name} = req.body;
+    const image = req.file.path.split('\\').slice(1).join('/');
+
+    const {code, message} = await create_brand({id, name, image});
+
+    return res.status(code).json({
+        code, message
+    });
+}
+// delete brand
+const deleteBrand = async (req, res) => {
+    const id = req.params.id;
+    const {code, message} = await delete_brand({id});
+
+    return res.status(code).json({
+        code, message
+    })
+}
 
 // export module
 module.exports = {
     getAllBrands,
     getProductByBrand,
-    getBrandByName
+    getBrandByName,
+    createBrand,
+    deleteBrand
 }

@@ -8,7 +8,7 @@ import Cookies from 'js-cookie';
 
 const title = "Logout";
 
-function Logout (props) {
+function Logout () {
     document.title = title.toUpperCase();
 
     const [msg, setMsg] = useState('');
@@ -42,7 +42,7 @@ function Logout (props) {
             <Container>
                 {msg}
             </Container>
-            <Footer brands={props.brands} categories={props.categories} />
+            <Footer />
         </>
     )
 }

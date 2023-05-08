@@ -60,10 +60,21 @@ const verifyRefreshToken = async (req, res, next) => {
         })
         
     });
-}
+};
+
+const authPage = permissions => {
+    return async (req, res, next) => {
+        const id = req.user_id;
+        const user = await _User.findOne({_id: id});
+        if (!user) return next(createError.InternalServerError())
+        if(!permissions.includes(user.role)) return next(createError.Unauthorized('Your account does not have access!'));
+        next();
+    }
+};
 
 // export module
 module.exports = {
     verifyAccessToken,
-    verifyRefreshToken
+    verifyRefreshToken,
+    authPage
 };

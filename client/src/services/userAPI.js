@@ -3,12 +3,42 @@ import Cookies from 'js-cookie';
 
 const host = process.env.REACT_APP_HOST;
 
-const GetUserById = async ({id}) => {
-    const path = `/user/${id}`;
-    const url = host + path;
-    const token = localStorage.getItem('accessToken');
-
+const GetAllUsers = async () => {
     try {
+        const path = `/user/get-all-users`;
+        const url = host + path;
+        let token = localStorage.getItem('accessToken');
+        if (!token) {
+            const resp = await RefreshToken();
+            token = resp.accessToken;
+            localStorage.setItem('accessToken', token);
+        }
+
+        const response = await axios.get(url, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        });
+        const res = response.data;
+    
+        return res.metadata;
+    } catch (error) {
+        return error.response.data;
+    }
+};
+
+const GetUserById = async ({id}) => {
+    try {
+        const path = `/user/${id}`;
+        const url = host + path;
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+            const resp = await RefreshToken();
+            token = resp.accessToken;
+            localStorage.setItem('accessToken', token);
+        }
+    
         const response = await axios.get(url, {
             headers: {
                 'Content-Type': 'application/json',
@@ -46,6 +76,9 @@ const Login = async (username, password) => {
 
 const LogOut = async () => {
     const refreshToken = Cookies.get('refreshToken');
+    if (!refreshToken) {
+        return {code: 401, message: 'You need sign in'};
+    }
     const path = '/user/logout';
     const url = host + path;
 
@@ -66,6 +99,9 @@ const LogOut = async () => {
 
 const RefreshToken = async () => {
     const refreshToken = Cookies.get('refreshToken');
+    if (!refreshToken) {
+        return {code: 401, message: 'you need sign in'};
+    }
     const path = '/user/refresh-token';
     const url = host + path;
 
@@ -113,12 +149,17 @@ const Register = async (username, password, email, name, re_password) => {
 };
 
 const CheckAccessAdminPage = async () => {
-    const path = `/user/check-access-admin-page`;
-    const url = host + path;
-    const token = localStorage.getItem('accessToken');
-    const id = localStorage.getItem('idUser');
-
     try {
+        const path = `/user/check-access-admin-page`;
+        const url = host + path;
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+            const resp = await RefreshToken();
+            token = resp.accessToken;
+            localStorage.setItem('accessToken', token);
+        }
+        const id = localStorage.getItem('idUser');
+
         const response = await axios.post(url, {id: id}, {
             headers: {
                 'Content-Type': 'application/json',
@@ -133,11 +174,65 @@ const CheckAccessAdminPage = async () => {
     }
 };
 
+const CreateUserByAdmin = async ({name, username, password, re_password, email, role}) => {
+    try {
+        const path = `/user/admin/create-user`;
+        const url = host + path;
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+            const resp = await RefreshToken();
+            token = resp.accessToken;
+            localStorage.setItem('accessToken', token);
+        }
+        const payload = {name, username, password, re_password, email, role};
+
+        const response = await axios.post(url, payload, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        });
+        return response;
+    } catch (error) {
+        return error.response.data;
+    }
+};
+
+const DeleteUser = async ({id}) => {
+    try {
+        const path = `/user/admin/delete-user/${id}`;
+        const url = host + path;
+
+        let token = localStorage.getItem('accessToken');
+        if (!token) {
+            const resp = await RefreshToken();
+            token = resp.accessToken;
+            localStorage.setItem('accessToken', token);
+        }
+
+        const response = await axios.delete(url, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        const res = response.data;
+        localStorage.setItem('res', JSON.stringify(res));
+    
+        return res;
+    } catch (error) {
+        return error.response.data;
+    }
+}
+
 export {
+    GetAllUsers,
     GetUserById,
     Login,
     LogOut,
     RefreshToken,
     Register,
-    CheckAccessAdminPage
+    CheckAccessAdminPage,
+    CreateUserByAdmin,
+    DeleteUser
 }

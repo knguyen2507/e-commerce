@@ -7,7 +7,9 @@ const {
     getUserById,
     logIn,
     logOut,
-    signUpGuest 
+    signUpGuest,
+    createUserByAdmin,
+    deleteUser 
 } = require('../controllers/user.controller');
 const {
     refreshToken,
@@ -20,18 +22,36 @@ const {
 } = require('../middlewares/user.middleware');
 const { 
     verifyAccessToken,
-    verifyRefreshToken
+    verifyRefreshToken,
+    authPage
 } = require('../middlewares/jwt.middleware');
 
 const router = express.Router();
 
-router.get('/get-all-users', getAllUsers);
+router.get('/get-all-users', [verifyAccessToken, authPage(['Admin'])], getAllUsers);
 router.post('/login', [checkLogin], logIn);
 router.post('/refresh-token', [verifyRefreshToken], refreshToken);
 router.delete('/logout', [verifyRefreshToken], logOut);
 router.post('/register', [checkRegister], signUpGuest);
-router.get('/:id', [verifyAccessToken], getUserById);
 router.post('/check-access-admin-page', [verifyAccessToken], checkAccessRoleAdmin);
+router.post(
+    '/admin/create-user', 
+    [
+        checkRegister,
+        verifyAccessToken,
+        authPage(['Admin'])
+    ], 
+    createUserByAdmin
+);
+router.delete(
+    '/admin/delete-user/:id', 
+    [
+        verifyAccessToken,
+        authPage(['Admin'])
+    ], 
+    deleteUser
+);
+router.get('/:id', [verifyAccessToken], getUserById);
 
 // export module
 module.exports = router;

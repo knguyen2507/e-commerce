@@ -51,11 +51,39 @@ const get_category_by_name = async ({id}) => {
             category
         }
     }
+};
+// create new category
+const create_category = async ({id, name}) => {
+    const newCategory = {id, name};
+
+    const category = await _Category.create(newCategory);
+
+    return {
+        code: 201,
+        message: "Category has been successfully created"
+    }
+};
+// delete category
+const delete_category = async ({id}) => {
+    const category = await _Category.findOne({id});
+    if (!category) {
+        return {
+            code: 500,
+            message: "Internal Server Error"
+        }
+    }
+    await _Category.deleteOne({id});
+    return {
+        code: 201,
+        message: "Category delete Successfully!"
+    }
 }
 
 // export module
 module.exports = {
     get_all_categories,
     get_product_by_category,
-    get_category_by_name
+    get_category_by_name,
+    create_category,
+    delete_category
 };

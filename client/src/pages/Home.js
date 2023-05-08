@@ -35,7 +35,13 @@ function Home (props) {
                     <Col style={{marginTop: "25px", marginBottom: "25px"}}>
                         <div style={itemImage}>
                             <Nav.Link href={"/product/" + product.id} >
-                                <img width="300" height="300" src={'images/' + product.idCategory + '/' + product.id + '.jpg'}></img>
+                                <img 
+                                    width="300" 
+                                    height="300" 
+                                    crossorigin="anonymous"
+                                    src={process.env.REACT_APP_HOST + '/' + product.image} 
+                                    alt="image product"
+                                ></img>
                             </Nav.Link>
                         </div>
                         <div style={itemInfo}>
@@ -45,7 +51,7 @@ function Home (props) {
                 ))}
                 </Row>
             </Container>
-            <Footer brands={props.brands} categories={props.categories} />
+            <Footer />
         </>
     );
 }
