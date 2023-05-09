@@ -3,6 +3,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import { MDBIcon } from 'mdb-react-ui-kit';
 import { useState } from "react";
 
 function Navigation () {
@@ -45,21 +46,24 @@ function Navigation () {
                     <Button variant="light" size="sm" onClick={searchProducts}>SEARCH</Button>
                 </Form>
                 {localStorage.getItem('role') === 'Admin' &&
-                <Nav className="justify-content-end">
-                    <Nav.Link href="/admin-page"><p style={tag_p} className="font-weight-bold fs-4">ADMIN</p></Nav.Link>
-                </Nav>
+                    <Nav className="justify-content-end">
+                        <Nav.Link href="/admin-page"><p style={tag_p} className="font-weight-bold fs-4">ADMIN</p></Nav.Link>
+                    </Nav>
                 }
                 {!localStorage.getItem('nameUser') &&
-                <Nav className="justify-content-end">
-                    <Nav.Link href="/login"><p style={tag_p} className="font-weight-bold fs-4">SIGN IN</p></Nav.Link>
-                    <Nav.Link href="/register"><p style={tag_p} className="font-weight-bold fs-4">SIGN UP</p></Nav.Link>
-                </Nav>
+                    <Nav className="justify-content-end">
+                        <Nav.Link href="/login"><p style={tag_p} className="font-weight-bold fs-4">SIGN IN</p></Nav.Link>
+                        <Nav.Link href="/register"><p style={tag_p} className="font-weight-bold fs-4">SIGN UP</p></Nav.Link>
+                    </Nav>
                 }
                 {localStorage.getItem('nameUser') &&
-                <Nav className="justify-content-end">
-                    <Nav.Link href={`/user/${localStorage.getItem('idUser')}`}><p style={tag_p} className="font-weight-bold fs-4">{localStorage.getItem('nameUser').toUpperCase()}</p></Nav.Link>
-                    <Nav.Link href="/logout"><p style={tag_p} className="font-weight-bold fs-4">SIGN OUT</p></Nav.Link>
-                </Nav>
+                    <Nav className="justify-content-end">
+                        <Nav.Link href={`/user/${localStorage.getItem('idUser')}`}><p style={tag_p} className="font-weight-bold fs-4">{localStorage.getItem('nameUser').toUpperCase()}</p></Nav.Link>
+                        <Nav.Link href="/logout"><p style={tag_p} className="font-weight-bold fs-4">SIGN OUT</p></Nav.Link>
+                        <Nav.Link href={`/user/cart/${localStorage.getItem('idUser')}`}>
+                            <MDBIcon color='light' icon='shopping-basket' className='me-3' size='2x' style={{margin: "10px"}} />
+                        </Nav.Link>
+                    </Nav>
                 }
             </Container>
         </Navbar>

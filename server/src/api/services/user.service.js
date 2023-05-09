@@ -9,6 +9,7 @@ const {
 } = require('./jwt.service');
 // models
 const _User = require('../models/user.model');
+const _Cart = require('../models/cart.model');
 // utils
 const { getData } = require('../utils');
 
@@ -115,6 +116,13 @@ const sign_up_guest = async ({
 
     const user = await _User.create(newUser);
 
+    const cart = {
+        id: user._id,
+        cart: []
+    };
+
+    await _Cart.create(cart);
+
     return {
         code: 201,
         message: "Your account has been successfully created",
@@ -138,6 +146,13 @@ const create_user_by_admin = async ({
 
     const user = await _User.create(newUser);
 
+    const cart = {
+        id: user._id,
+        cart: []
+    };
+
+    await _Cart.create(cart);
+
     return {
         code: 201,
         message: "Your account has been successfully created",
@@ -155,6 +170,7 @@ const delete_user = async ({id}) => {
     }
 
     await _User.deleteOne({_id: id});
+    await _Cart.deleteOne({id});
     client.del(id.toString());
     return {
         code: 201,

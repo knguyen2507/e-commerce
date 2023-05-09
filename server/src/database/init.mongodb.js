@@ -9,6 +9,7 @@ const _Role = require('../api/models/role.model');
 const _Brand = require('../api/models/brand.model');
 const _Category = require('../api/models/category.model');
 const _Product = require('../api/models/product.model');
+const _Cart = require('../api/models/brand.model');
 // json data
 const dbUser = require('./db/user.db.json');
 const dbRole = require('./db/role.db.json');
@@ -53,6 +54,21 @@ _User.estimatedDocumentCount(async (err, count) => {
                 console.log(err);
             } else {
                 console.log("add Users database to collection");
+            }
+        });
+        const carts = [];
+        const users = await _User.find({});
+        for (let user of users) {
+            const cart = {
+                id: user._id.toString(),
+                cart: []
+            }
+
+            carts.push(cart);
+        }
+        await db.collection('Carts').insertMany(carts, function(err) {
+            if (err) {
+                console.log(err);
             }
         });
     }

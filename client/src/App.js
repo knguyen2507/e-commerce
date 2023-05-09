@@ -18,6 +18,7 @@ import Logout from './pages/Logout.js';
 import User from './pages/User.js';
 import Admin from './pages/Admin.js';
 import NotFound from './pages/NotFound.js';
+import Cart from './pages/Cart.js';
 // call api
 import { GetAllProducts } from './services/productAPI.js';
 
@@ -46,6 +47,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Home products={products} />} />
+          <Route path='/user/cart/:id' element={<Cart />} />
           <Route path='/user/:id' element={<User />} />
           <Route path='/login' element={<Signin />} />
           <Route path='/register' element={<Signup />} />

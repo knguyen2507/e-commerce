@@ -15,6 +15,20 @@ const {
     refreshToken,
     checkAccessRoleAdmin
 } =require('../controllers/jwt.controller');
+const {
+    getCartById,
+    addProductToCart,
+    reduceProductInCart,
+    removeProductFromCart
+} = require('../controllers/cart.controller');
+const {
+    getAllPayments,
+    getAllHistoryPayments,
+    paymentCart,
+    cancelPayment,
+    cancelPaymentByAdmin,
+    confirmPayment
+} = require('../controllers/payment.controller');
 // middlewares
 const {
     checkLogin,
@@ -50,6 +64,80 @@ router.delete(
         authPage(['Admin'])
     ], 
     deleteUser
+);
+router.get(
+    '/admin/payment/get-all-payments', 
+    [
+        verifyAccessToken,
+        authPage(['Admin'])
+    ], 
+    getAllPayments
+);
+router.get(
+    '/admin/payment/get-all-history-payments', 
+    [
+        verifyAccessToken,
+        authPage(['Admin'])
+    ], 
+    getAllHistoryPayments
+);
+router.delete(
+    '/admin/payment/:id/cancel-payment', 
+    [
+        verifyAccessToken,
+        authPage(['Admin'])
+    ], 
+    cancelPaymentByAdmin
+);
+router.post(
+    '/admin/payment/:id/confirm-payment', 
+    [
+        verifyAccessToken,
+        authPage(['Admin'])
+    ], 
+    confirmPayment
+);
+router.get(
+    '/cart/:id', 
+    [
+        verifyAccessToken
+    ], 
+    getCartById
+);
+router.post(
+    '/cart/:id/add-product-to-cart', 
+    [
+        verifyAccessToken
+    ], 
+    addProductToCart
+);
+router.patch(
+    '/cart/:id/reduce-product-from-cart', 
+    [
+        verifyAccessToken
+    ], 
+    reduceProductInCart
+);
+router.patch(
+    '/cart/:id/remove-product-from-cart', 
+    [
+        verifyAccessToken
+    ], 
+    removeProductFromCart
+);
+router.post(
+    '/cart/:id/payment', 
+    [
+        verifyAccessToken
+    ], 
+    paymentCart
+);
+router.delete(
+    '/cart/:id/payment/:idPayment/cancel-payment', 
+    [
+        verifyAccessToken
+    ], 
+    cancelPayment
 );
 router.get('/:id', [verifyAccessToken], getUserById);
 
