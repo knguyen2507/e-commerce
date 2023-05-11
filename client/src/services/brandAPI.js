@@ -51,7 +51,6 @@ const CreateBrand = async (fd) => {
                 'Authorization': `Bearer ${token}`
             }
         });
-        localStorage.setItem('res', JSON.stringify(response));
     
         return response;
     } catch (error) {

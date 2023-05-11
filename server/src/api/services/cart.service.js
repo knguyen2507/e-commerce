@@ -5,7 +5,7 @@ const _Cart = require('../models/cart.model');
 const _Product = require('../models/product.model');
 // get cart by id
 const get_cart_by_id = async ({id}) => {
-    const cart = await _Cart.findOne({id});
+    const cart = await _Cart.find({idUser: id});
     if (!cart) {
         return {
             code: 500,
@@ -18,58 +18,45 @@ const get_cart_by_id = async ({id}) => {
     }
 };
 // add product to cart
-const add_product_to_cart = async ({id, product}) => {
-    const cart = await _Cart.findOne({id});
-    if (!cart) {
+const add_product_to_cart = async ({id, idProduct}) => {
+    const cart = await _Cart.findOne({idUser: id, idProduct});
+    const productInInventory = await _Product.findOne({id: idProduct});
+
+    if (!productInInventory) {
         return {
             code: 500,
             message: "Internal Server Error"
         }
     }
 
-    const productsInCart = cart.cart;
-    const productInCart = await _Cart.findOne(
-        {
-            id: id
-        }, {
-            cart: {$elemMatch: {id: product.id}}
-        }
-    );
+    if (cart) {
+        return await add_qty_product_in_cart({id: cart._id, idUser: id});
+    }
 
-    const productInInventory = await _Product.findOne({id: product.id});
-
-    if (productInInventory.qty < product.qty) {
+    if (productInInventory.qty < 1) {
         return {
             code: 401,
             message: "You buy more than the qty of product in stock"
         }
     }
 
-    await _Product.updateOne({id: product.id}, {$set: {qty: productInInventory.qty - product.qty}});
-    
-    if (productInCart.cart.length > 0) {
-        await _Cart.updateOne(
-            {
-                id,
-                'cart.id': product.id
-            }, {
-                $set: { "cart.$.qty" : productInCart.cart[0].qty + product.qty }
-            }
-        )
-    } else {
-        productsInCart.push(product);
-        await _Cart.updateOne({id}, {$set: {cart: productsInCart}});
-    }
+    await _Cart.create({
+        idUser: id,
+        idProduct: productInInventory.id,
+        name: productInInventory.name,
+        qty: 1,
+        price: productInInventory.price,
+        image: productInInventory.image
+    })
 
     return {
         code: 201,
-        message: `Add product ${product.name} Successfully!`
+        message: `Add product ${productInInventory.name} Successfully!`
     }
 };
-// reduce the qty product in cart
-const reduce_product_in_cart = async ({id, idProduct}) => {
-    const cart = await _Cart.findOne({id});
-    const product = await _Product.findOne({id: idProduct});
+// add qty product in cart
+const add_qty_product_in_cart = async ({id, idUser}) => {
+    const cart = await _Cart.findOne({_id: id});
     if (!cart) {
         return {
             code: 500,
@@ -77,38 +64,66 @@ const reduce_product_in_cart = async ({id, idProduct}) => {
         }
     }
 
-    const productInCart = await _Cart.findOne(
-        {
-            id: id
-        }, {
-            cart: {$elemMatch: {id: idProduct}}
+    if (cart.idUser !== idUser) {
+        return {
+            code: 401,
+            message: "You does not have access!"
         }
-    );
-    console.log(`productInCart:::`, productInCart);
+    }
 
-    if (productInCart.cart[0].qty === 1) {
-        return remove_product_from_cart({id, idProduct});
-    };
+    const productInInventory = await _Product.findOne({id: cart.idProduct});
+
+    if (productInInventory.qty === cart.qty) {
+        return {
+            code: 401,
+            message: "You buy more than the qty of product in stock"
+        }
+    }
 
     await _Cart.updateOne(
-        {
-            id,
-            'cart.id': idProduct
-        }, {
-            $set: { "cart.$.qty" : productInCart.cart[0].qty - 1 }
-        }
-    )
-
-    await _Product.updateOne({id: idProduct}, {$set: {qty: product.qty + 1}});
+        {_id: id}, 
+        {$set: {qty:cart.qty + 1}}
+    );
 
     return {
         code: 201,
-        message: `Reduce 1 item ${product.name} from Cart!`
+        message: `Add 1 item from Cart ${id}!`
+    }
+}
+// reduce qty product in cart
+const reduce_product_in_cart = async ({id, idUser}) => {
+    const cart = await _Cart.findOne({_id: id});
+    if (!cart) {
+        return {
+            code: 500,
+            message: "Internal Server Error"
+        }
+    }
+
+    if (cart.idUser !== idUser) {
+        return {
+            code: 401,
+            message: "You does not have access!"
+        }
+    }
+
+    if (cart.qty === 1) {
+        return await remove_product_from_cart({id, idUser})
+    }
+
+    await _Cart.updateOne(
+        {_id: id}, 
+        {$set: {qty:cart.qty - 1}}
+    );
+
+    return {
+        code: 201,
+        message: `Reduce 1 item from Cart ${id}!`
     }
 };
 // remove product from cart
-const remove_product_from_cart = async ({id, idProduct}) => {
-    const cart = await _Cart.findOne({id});
+const remove_product_from_cart = async ({id, idUser}) => {
+    const cart = await _Cart.findOne({_id: id});
     if (!cart) {
         return {
             code: 500,
@@ -116,27 +131,18 @@ const remove_product_from_cart = async ({id, idProduct}) => {
         }
     }
 
-    const productInCart = await _Cart.findOne(
-        {
-            id: id
-        }, {
-            cart: {$elemMatch: {id: idProduct}}
+    if (cart.idUser !== idUser) {
+        return {
+            code: 401,
+            message: "You does not have access!"
         }
-    );
+    }
 
-    const qty = productInCart.cart[0].qty;
-    const product = await _Product.findOne({id: idProduct});
-
-    await _Cart.update(
-        {id},
-        { $pull: { 'cart': { id: idProduct } } }
-    );
-
-    await _Product.updateOne({id: idProduct}, {$set: {qty: qty + product.qty}});
+    await _Cart.deleteOne({_id: id})
 
     return {
         code: 201,
-        message: `Remove product ${product.name} from Cart!`
+        message: `Remove Cart ${id}!`
     }
 }
 
@@ -144,6 +150,7 @@ const remove_product_from_cart = async ({id, idProduct}) => {
 module.exports = {
     get_cart_by_id,
     add_product_to_cart,
+    add_qty_product_in_cart,
     reduce_product_in_cart,
     remove_product_from_cart
 };

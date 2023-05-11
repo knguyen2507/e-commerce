@@ -5,11 +5,22 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from "react-bootstrap/Col";
 import Nav from 'react-bootstrap/Nav';
+import { useState, useEffect } from "react";
+import { GetAllProducts } from "../services/productAPI.js";
 
 const title = "HOME";
 
-function Home (props) {
+function Home () {
     document.title = title;
+    const [products, setProducts] = useState([]);
+
+    useEffect(() => {
+        const getAllProducts = async () => {
+            const products = await GetAllProducts();
+            setProducts(products);
+        }
+        getAllProducts();
+    }, [])
 
     const itemImage = {
         width: "300px", 
@@ -31,7 +42,7 @@ function Home (props) {
             <Title title={title} />
             <Container>
                 <Row md={3}>
-                {props.products.map(product => (
+                {products.map(product => (
                     <Col style={{marginTop: "25px", marginBottom: "25px"}}>
                         <div style={itemImage}>
                             <Nav.Link href={"/product/" + product.id} >

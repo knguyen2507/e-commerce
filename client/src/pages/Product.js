@@ -5,9 +5,14 @@ import Col from "react-bootstrap/Col";
 import Row from 'react-bootstrap/Row';
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+import Cookies from 'js-cookie';
+import { 
+    RefreshToken 
+} from "../services/userAPI.js";
 import { 
     GetProductById 
 } from '../services/productAPI.js';
+import { AddProductToCart } from "../services/cartAPI.js";
 
 const title = "Product";
 
@@ -53,7 +58,25 @@ function Product () {
     };
 
     const addProductToCart = async () => {
-        
+        const res = await AddProductToCart({idProduct: id});
+        if (res.code >= 400 && res.message !== 'jwt expired') {
+            alert(res.message);
+        } else if (res.code >= 400 && res.message === 'jwt expired') {
+            const response = await RefreshToken();
+            if (response.code >= 400) {
+                alert(response.message);
+                localStorage.removeItem('accessToken');
+                localStorage.removeItem('idUser');
+                localStorage.removeItem('nameUser');
+                localStorage.removeItem('role');
+                Cookies.remove('refreshToken');
+            } else {
+                const accessToken = response.accessToken;
+                localStorage.setItem('accessToken', accessToken);
+            }
+        } else {
+            alert(res.message);
+        }
     };
 
     function AddToCart() {

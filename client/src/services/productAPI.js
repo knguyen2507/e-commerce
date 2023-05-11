@@ -112,7 +112,6 @@ const DeleteProduct = async ({id}) => {
             }
         });
         const res = response.data;
-        localStorage.setItem('res', JSON.stringify(res));
     
         return res;
     } catch (error) {

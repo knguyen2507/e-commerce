@@ -14,6 +14,7 @@ const userRouter = require('./api/routes/user.router');
 const productRouter = require('./api/routes/product.router');
 const categoryRouter = require('./api/routes/category.router');
 const brandRouter = require('./api/routes/brand.router');
+const cartRouter = require('./api/routes/cart.router');
 
 const app = express();
 // init middlewares
@@ -32,6 +33,7 @@ app.use('/user', userRouter);
 app.use('/product', productRouter);
 app.use('/category', categoryRouter);
 app.use('/brand', brandRouter);
+app.use('/cart', cartRouter);
 // handling error
 app.use((req, res, next) => {
     next(createError.NotFound('This route does not exist!'));

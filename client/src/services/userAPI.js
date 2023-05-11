@@ -217,13 +217,12 @@ const DeleteUser = async ({id}) => {
             }
         });
         const res = response.data;
-        localStorage.setItem('res', JSON.stringify(res));
     
         return res;
     } catch (error) {
         return error.response.data;
     }
-}
+};
 
 export {
     GetAllUsers,

@@ -4,7 +4,6 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'bootstrap-css-only/css/bootstrap.min.css';
 import 'mdbreact/dist/css/mdb.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useState, useEffect } from "react";
 import {ErrorBoundary} from 'react-error-boundary';
 // pages
 import Home from './pages/Home.js';
@@ -19,20 +18,8 @@ import User from './pages/User.js';
 import Admin from './pages/Admin.js';
 import NotFound from './pages/NotFound.js';
 import Cart from './pages/Cart.js';
-// call api
-import { GetAllProducts } from './services/productAPI.js';
 
 function App() {
-  const [products, setProducts] = useState([]);
-
-  useEffect(() => {
-    const getAllProducts = async () => {
-        const products = await GetAllProducts();
-        setProducts(products);
-    }
-    getAllProducts();
-  }, [])
-
   function ErrorHandler({error}) {
     return (
       <div role="alert">
@@ -46,7 +33,7 @@ function App() {
     <ErrorBoundary FallbackComponent={ErrorHandler}>
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={<Home products={products} />} />
+          <Route path='/' element={<Home />} />
           <Route path='/user/cart/:id' element={<Cart />} />
           <Route path='/user/:id' element={<User />} />
           <Route path='/login' element={<Signin />} />

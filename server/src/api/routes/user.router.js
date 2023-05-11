@@ -16,12 +16,6 @@ const {
     checkAccessRoleAdmin
 } =require('../controllers/jwt.controller');
 const {
-    getCartById,
-    addProductToCart,
-    reduceProductInCart,
-    removeProductFromCart
-} = require('../controllers/cart.controller');
-const {
     getAllPayments,
     getAllHistoryPayments,
     paymentCart,
@@ -96,34 +90,6 @@ router.post(
         authPage(['Admin'])
     ], 
     confirmPayment
-);
-router.get(
-    '/cart/:id', 
-    [
-        verifyAccessToken
-    ], 
-    getCartById
-);
-router.post(
-    '/cart/:id/add-product-to-cart', 
-    [
-        verifyAccessToken
-    ], 
-    addProductToCart
-);
-router.patch(
-    '/cart/:id/reduce-product-from-cart', 
-    [
-        verifyAccessToken
-    ], 
-    reduceProductInCart
-);
-router.patch(
-    '/cart/:id/remove-product-from-cart', 
-    [
-        verifyAccessToken
-    ], 
-    removeProductFromCart
 );
 router.post(
     '/cart/:id/payment', 
