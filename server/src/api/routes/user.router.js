@@ -5,6 +5,7 @@ const express = require('express');
 const { 
     getAllUsers,
     getUserById,
+    getUserByAdmin,
     logIn,
     logOut,
     signUpGuest,
@@ -15,14 +16,6 @@ const {
     refreshToken,
     checkAccessRoleAdmin
 } =require('../controllers/jwt.controller');
-const {
-    getAllPayments,
-    getAllHistoryPayments,
-    paymentCart,
-    cancelPayment,
-    cancelPaymentByAdmin,
-    confirmPayment
-} = require('../controllers/payment.controller');
 // middlewares
 const {
     checkLogin,
@@ -60,50 +53,12 @@ router.delete(
     deleteUser
 );
 router.get(
-    '/admin/payment/get-all-payments', 
+    '/admin/get-user-by-id/:id', 
     [
         verifyAccessToken,
         authPage(['Admin'])
     ], 
-    getAllPayments
-);
-router.get(
-    '/admin/payment/get-all-history-payments', 
-    [
-        verifyAccessToken,
-        authPage(['Admin'])
-    ], 
-    getAllHistoryPayments
-);
-router.delete(
-    '/admin/payment/:id/cancel-payment', 
-    [
-        verifyAccessToken,
-        authPage(['Admin'])
-    ], 
-    cancelPaymentByAdmin
-);
-router.post(
-    '/admin/payment/:id/confirm-payment', 
-    [
-        verifyAccessToken,
-        authPage(['Admin'])
-    ], 
-    confirmPayment
-);
-router.post(
-    '/cart/:id/payment', 
-    [
-        verifyAccessToken
-    ], 
-    paymentCart
-);
-router.delete(
-    '/cart/:id/payment/:idPayment/cancel-payment', 
-    [
-        verifyAccessToken
-    ], 
-    cancelPayment
+    getUserByAdmin
 );
 router.get('/:id', [verifyAccessToken], getUserById);
 

@@ -10,11 +10,7 @@ const historyPaymentSchema = new Schema({
         type: String,
         maxLength: 100
     },
-    idUser: {
-        type: String,
-        maxLength: 100
-    },
-    products: []
+    carts: []
 }, {
     collection: COLLECTION_NAME,
     timestamps: true

@@ -5,6 +5,7 @@ const createError = require('http-errors');
 const { 
     get_all_users,
     get_user_by_id,
+    get_user_by_admin,
     login,
     logout,
     sign_up_guest,
@@ -29,6 +30,16 @@ const getUserById = async (req, res) => {
         })
     }; 
     const {code, metadata, message} = await get_user_by_id({id});
+
+    return res.status(code).json({
+        code, metadata, message
+    })
+};
+// admin get user by id
+const getUserByAdmin = async (req, res) => {
+    const id = req.params.id;
+
+    const {code, metadata, message} = await get_user_by_admin({id});
 
     return res.status(code).json({
         code, metadata, message
@@ -97,6 +108,7 @@ const deleteUser = async (req, res) => {
 module.exports = {
     getAllUsers,
     getUserById,
+    getUserByAdmin,
     logIn,
     logOut,
     signUpGuest,

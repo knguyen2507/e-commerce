@@ -4,8 +4,12 @@
 const {
     get_all_payments,
     get_all_history_payments,
+    get_payment_by_id,
+    get_payments_by_id_user,
+    get_history_payments_by_id_user,
     payment_cart,
     cancel_payment,
+    cancel_payment_by_admin,
     confirm_payment
 } = require('../services/payment.service');
 
@@ -25,8 +29,18 @@ const getAllHistoryPayments = async (req, res) => {
         code, metadata, message
     });
 };
-// customer request payment
-const paymentCart = async (req, res) => {
+// get payment by id
+const getPaymentById = async (req, res) => {
+    const id = req.params.id;
+
+    const {code, metadata, message} = await get_payment_by_id({id, idUser: req.user_id});
+    
+    return res.status(code).json({
+        code, metadata, message
+    });
+};
+// get payments by id user
+const getPaymentsByIdUser = async (req, res) => {
     const id = req.params.id;
 
     if (id !== req.user_id) {
@@ -35,7 +49,40 @@ const paymentCart = async (req, res) => {
         });
     }
 
-    const {code, message} = await payment_cart({id});
+    const {code, metadata, message} = await get_payments_by_id_user({id});
+    
+    return res.status(code).json({
+        code, metadata, message
+    });
+};
+// get history payments by id user
+const getHistoryPaymentsByIdUser = async (req, res) => {
+    const id = req.params.id;
+
+    if (id !== req.user_id) {
+        return res.status(401).json({
+            code: 401, message: "You does not have access!"
+        });
+    }
+
+    const {code, metadata, message} = await get_history_payments_by_id_user({id});
+    
+    return res.status(code).json({
+        code, metadata, message
+    });
+};
+// customer request payment
+const paymentCart = async (req, res) => {
+    const id = req.params.id;
+    const carts = req.body.carts;
+
+    if (id !== req.user_id) {
+        return res.status(401).json({
+            code: 401, message: "You does not have access!"
+        });
+    }
+
+    const {code, message} = await payment_cart({id, carts});
 
     return res.status(code).json({
         code, message
@@ -44,15 +91,8 @@ const paymentCart = async (req, res) => {
 // customer cancel payment
 const cancelPayment = async (req, res) => {
     const id = req.params.id;
-    const idPayment = req.params.idPayment;
 
-    if (id !== req.user_id) {
-        return res.status(401).json({
-            code: 401, message: "You does not have access!"
-        });
-    }
-
-    const {code, message} = await cancel_payment({id: idPayment});
+    const {code, message} = await cancel_payment({id, idUser: req.user_id});
 
     return res.status(code).json({
         code, message
@@ -62,7 +102,7 @@ const cancelPayment = async (req, res) => {
 const cancelPaymentByAdmin = async (req, res) => {
     const id = req.params.id;
 
-    const {code, message} = await cancel_payment({id: id});
+    const {code, message} = await cancel_payment_by_admin({id: id});
 
     return res.status(code).json({
         code, message
@@ -83,6 +123,9 @@ const confirmPayment = async (req, res) => {
 module.exports = {
     getAllPayments,
     getAllHistoryPayments,
+    getPaymentById,
+    getPaymentsByIdUser,
+    getHistoryPaymentsByIdUser,
     paymentCart,
     cancelPayment,
     cancelPaymentByAdmin,

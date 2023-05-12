@@ -36,7 +36,7 @@ const add_product_to_cart = async ({id, idProduct}) => {
     if (productInInventory.qty < 1) {
         return {
             code: 401,
-            message: "You buy more than the qty of product in stock"
+            message: "You buy more than the qty of product in inventory"
         }
     }
 
@@ -76,7 +76,7 @@ const add_qty_product_in_cart = async ({id, idUser}) => {
     if (productInInventory.qty === cart.qty) {
         return {
             code: 401,
-            message: "You buy more than the qty of product in stock"
+            message: "You buy more than the qty of product in inventory"
         }
     }
 

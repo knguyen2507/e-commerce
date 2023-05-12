@@ -10,16 +10,7 @@ const paymentSchema = new Schema({
         type: String,
         maxLength: 100
     },
-    idUser: {
-        type: String,
-        maxLength: 100
-    },
-    products: [],
-    time: {
-        type: Date,
-        default: Date.now,
-        index: {expires: 60*10}
-    }
+    carts: []
 }, {
     collection: COLLECTION_NAME,
     timestamps: true

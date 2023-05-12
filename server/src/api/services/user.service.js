@@ -43,6 +43,27 @@ const get_user_by_id = async ({id}) => {
             message: "Internal Server Error"
         }
     }
+    
+    return {
+        code: 200,
+        metadata: {
+            user: getData({
+                    fields: ['_id', 'name', 'email', 'role'],
+                    object: user
+                })
+        }
+    }
+};
+// admin get user by id
+const get_user_by_admin = async ({id}) => {
+    const user = await _User.findOne({_id: id});
+    if (!user) {
+        return {
+            code: 500,
+            message: "Internal Server Error"
+        }
+    }
+    
     return {
         code: 200,
         metadata: {
@@ -182,6 +203,7 @@ const delete_user = async ({id}) => {
 module.exports = {
     get_all_users,
     get_user_by_id,
+    get_user_by_admin,
     login,
     logout,
     sign_up_guest,
