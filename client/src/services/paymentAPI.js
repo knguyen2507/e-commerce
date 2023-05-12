@@ -1,36 +1,11 @@
 import axios from "axios";
-import Cookies from 'js-cookie';
+import { RefreshToken } from "./userAPI.js";
 
 const host = process.env.REACT_APP_HOST;
 
-const GetAllUsers = async () => {
+const GetAllPayments = async () => {
     try {
-        const path = `/user/get-all-users`;
-        const url = host + path;
-        let token = localStorage.getItem('accessToken');
-        if (!token) {
-            const resp = await RefreshToken();
-            token = resp.accessToken;
-            localStorage.setItem('accessToken', token);
-        }
-
-        const response = await axios.get(url, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-        });
-        const res = response.data;
-    
-        return res.metadata;
-    } catch (error) {
-        return error.response.data;
-    }
-};
-
-const GetUserById = async ({id}) => {
-    try {
-        const path = `/user/${id}`;
+        const path = `/payment/admin/get-all-payments`;
         const url = host + path;
         const token = localStorage.getItem('accessToken');
         if (!token) {
@@ -40,152 +15,6 @@ const GetUserById = async ({id}) => {
         }
     
         const response = await axios.get(url, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-        });
-        const res = response.data;
-    
-        return res.metadata;
-    } catch (error) {
-        return error.response.data;
-    }
-};
-
-const GetUserByAdmin = async ({id}) => {
-    try {
-        const path = `/user/admin/get-user-by-id/${id}`;
-        const url = host + path;
-        const token = localStorage.getItem('accessToken');
-        if (!token) {
-            const resp = await RefreshToken();
-            token = resp.accessToken;
-            localStorage.setItem('accessToken', token);
-        }
-    
-        const response = await axios.get(url, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-        });
-        const res = response.data;
-    
-        return res.metadata;
-    } catch (error) {
-        return error.response.data;
-    }
-};
-
-const Login = async (username, password) => {
-    const path = '/user/login';
-    const url = host + path;
-
-    const payload = {username: username, password: password};
-
-    try {
-        const response = await axios.post(url, payload, {
-            headers: {
-                'Content-Type': 'application/json'
-            },
-        });
-        const res = response.data;
-    
-        return res.metadata;
-    } catch (error) {
-        return error.response.data;
-    }
-    
-};
-
-const LogOut = async () => {
-    const refreshToken = Cookies.get('refreshToken');
-    if (!refreshToken) {
-        return {code: 401, message: 'You need sign in'};
-    }
-    const path = '/user/logout';
-    const url = host + path;
-
-    const payload = {refreshToken: refreshToken};
-    try {
-        const response = await axios.delete(url, {
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            data: payload
-        });
-    
-        return response.data;
-    } catch (error) {
-        return error.response.data
-    }
-};
-
-const RefreshToken = async () => {
-    const refreshToken = Cookies.get('refreshToken');
-    if (!refreshToken) {
-        return {code: 401, message: 'you need sign in'};
-    }
-    const path = '/user/refresh-token';
-    const url = host + path;
-
-    const payload = {refreshToken: refreshToken};
-    try {
-        const response = await axios.post(url, payload, {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-    
-        const res = response.data;
-        
-        return res;
-    } catch (error) {
-        return error.response.data
-    }
-};
-
-const Register = async (username, password, email, name, re_password) => {
-    const path = '/user/register';
-    const url = host + path;
-
-    const payload = {
-        username: username, 
-        password: password,
-        email: email,
-        name: name,
-        re_password: re_password
-    };
-
-    try {
-        const response = await axios.post(url, payload, {
-            headers: {
-                'Content-Type': 'application/json'
-            },
-        });
-        const res = response.data;
-    
-        return res.metadata;
-    } catch (error) {
-        return error.response.data;
-    }
-    
-};
-
-const CheckAccessAdminPage = async () => {
-    try {
-        const path = `/user/check-access-admin-page`;
-        const url = host + path;
-        const token = localStorage.getItem('accessToken');
-        if (!token) {
-            const resp = await RefreshToken();
-            token = resp.accessToken;
-            localStorage.setItem('accessToken', token);
-        }
-        const id = localStorage.getItem('idUser');
-
-        const response = await axios.post(url, {id: id}, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
@@ -199,9 +28,9 @@ const CheckAccessAdminPage = async () => {
     }
 };
 
-const CreateUserByAdmin = async ({name, username, password, re_password, email, role}) => {
+const GetAllHistoryPayments = async () => {
     try {
-        const path = `/user/admin/create-user`;
+        const path = `/payment/admin/history`;
         const url = host + path;
         const token = localStorage.getItem('accessToken');
         if (!token) {
@@ -209,37 +38,188 @@ const CreateUserByAdmin = async ({name, username, password, re_password, email, 
             token = resp.accessToken;
             localStorage.setItem('accessToken', token);
         }
-        const payload = {name, username, password, re_password, email, role};
+    
+        const response = await axios.get(url, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        });
+        const res = response.data;
+    
+        return res;
+    } catch (error) {
+        return error.response.data;
+    }
+};
 
+const GetPaymentById = async ({id}) => {
+    try {
+        const path = `/payment/${id}`;
+        const url = host + path;
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+            const resp = await RefreshToken();
+            token = resp.accessToken;
+            localStorage.setItem('accessToken', token);
+        }
+    
+        const response = await axios.get(url, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        });
+        const res = response.data;
+    
+        return res;
+    } catch (error) {
+        return error.response.data;
+    }
+};
+
+const GetPaymentsByIdUser = async ({id}) => {
+    try {
+        const path = `/payment/user/${id}/get-payments-by-id`;
+        const url = host + path;
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+            const resp = await RefreshToken();
+            token = resp.accessToken;
+            localStorage.setItem('accessToken', token);
+        }
+    
+        const response = await axios.get(url, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        });
+        const res = response.data;
+    
+        return res;
+    } catch (error) {
+        return error.response.data;
+    }
+};
+
+const GetHistoryPaymentsByIdUser = async ({id}) => {
+    try {
+        const path = `/payment/user/${id}/get-history-payments-by-id`;
+        const url = host + path;
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+            const resp = await RefreshToken();
+            token = resp.accessToken;
+            localStorage.setItem('accessToken', token);
+        }
+    
+        const response = await axios.get(url, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        });
+        const res = response.data;
+    
+        return res;
+    } catch (error) {
+        return error.response.data;
+    }
+};
+
+const PaymentCart = async ({id, carts}) => {
+    try {
+        const path = `/payment/user/${id}/send-payment`;
+        const url = host + path;
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+            const resp = await RefreshToken();
+            token = resp.accessToken;
+            localStorage.setItem('accessToken', token);
+        }
+        const payload = {carts};
+    
         const response = await axios.post(url, payload, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
         });
-        return response;
+        const res = response.data;
+    
+        return res;
     } catch (error) {
         return error.response.data;
     }
 };
 
-const DeleteUser = async ({id}) => {
+const CancelPayment = async ({id}) => {
     try {
-        const path = `/user/admin/delete-user/${id}`;
+        const path = `/payment/user/${id}/cancel-payment`;
         const url = host + path;
-
-        let token = localStorage.getItem('accessToken');
+        const token = localStorage.getItem('accessToken');
         if (!token) {
             const resp = await RefreshToken();
             token = resp.accessToken;
             localStorage.setItem('accessToken', token);
         }
-
+    
         const response = await axios.delete(url, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
-            }
+            },
+        });
+        const res = response.data;
+    
+        return res;
+    } catch (error) {
+        return error.response.data;
+    }
+};
+
+const CancelPaymentByAdmin = async ({id}) => {
+    try {
+        const path = `/payment/admin/${id}/cancel-payment`;
+        const url = host + path;
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+            const resp = await RefreshToken();
+            token = resp.accessToken;
+            localStorage.setItem('accessToken', token);
+        }
+    
+        const response = await axios.delete(url, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        });
+        const res = response.data;
+    
+        return res;
+    } catch (error) {
+        return error.response.data;
+    }
+};
+
+const ConfirmPayment = async ({id}) => {
+    try {
+        const path = `/payment/admin/${id}/confirm-payment`;
+        const url = host + path;
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+            const resp = await RefreshToken();
+            token = resp.accessToken;
+            localStorage.setItem('accessToken', token);
+        }
+    
+        const response = await axios.post(url, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
         });
         const res = response.data;
     
@@ -250,14 +230,13 @@ const DeleteUser = async ({id}) => {
 };
 
 export {
-    GetAllUsers,
-    GetUserById,
-    GetUserByAdmin,
-    Login,
-    LogOut,
-    RefreshToken,
-    Register,
-    CheckAccessAdminPage,
-    CreateUserByAdmin,
-    DeleteUser
-}
+    GetAllPayments,
+    GetAllHistoryPayments,
+    GetPaymentById,
+    GetPaymentsByIdUser,
+    GetHistoryPaymentsByIdUser,
+    PaymentCart,
+    CancelPayment,
+    CancelPaymentByAdmin,
+    ConfirmPayment
+};

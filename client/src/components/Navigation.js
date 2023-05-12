@@ -3,6 +3,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import NavDropdown from 'react-bootstrap/NavDropdown';
 import { MDBIcon } from 'mdb-react-ui-kit';
 import { useState } from "react";
 
@@ -58,7 +59,27 @@ function Navigation () {
                 }
                 {localStorage.getItem('nameUser') &&
                     <Nav className="justify-content-end">
-                        <Nav.Link href={`/user/${localStorage.getItem('idUser')}`}><p style={tag_p} className="font-weight-bold fs-4">{localStorage.getItem('nameUser').toUpperCase()}</p></Nav.Link>
+                        <Nav>
+                            <NavDropdown
+                                id="nav-dropdown-dark-example"
+                                title={localStorage.getItem('nameUser').toUpperCase()}
+                                menuVariant="dark"
+                                style={{marginTop: "18px"}}
+                            >
+                                <NavDropdown.Item href={`/user/${localStorage.getItem('idUser')}`}>
+                                    Profile
+                                </NavDropdown.Item>
+                                <NavDropdown.Item href={`/user/cart/${localStorage.getItem('idUser')}`}>
+                                    Cart
+                                </NavDropdown.Item>
+                                <NavDropdown.Item href={`/user/payment/${localStorage.getItem('idUser')}`}>
+                                    Payment
+                                </NavDropdown.Item>
+                                <NavDropdown.Item href={`/user/history-payment/${localStorage.getItem('idUser')}`}>
+                                    Payment History
+                                </NavDropdown.Item>
+                            </NavDropdown>
+                        </Nav>
                         <Nav.Link href="/logout"><p style={tag_p} className="font-weight-bold fs-4">SIGN OUT</p></Nav.Link>
                         <Nav.Link href={`/user/cart/${localStorage.getItem('idUser')}`}>
                             <MDBIcon color='light' icon='shopping-basket' className='me-3' size='2x' style={{margin: "10px"}} />

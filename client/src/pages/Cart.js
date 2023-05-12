@@ -17,6 +17,9 @@ import {
     ReduceQtyProductInCart,
     RemoveProductInCart 
 } from "../services/cartAPI.js";
+import { 
+    PaymentCart 
+} from "../services/paymentAPI.js";
 
 const title = "Cart";
 
@@ -25,13 +28,6 @@ function Cart () {
     const [products, setProducts] = useState([]);
     const [error, setError] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
-    const [key, setKey] = useState('');
-
-    function searchBtn() {
-        if (key !== '') {
-            return true
-        }
-    };
 
     const addQtyProductToCart = async (idCart) => {
         const res = await AddQtyProductInCart({id: idCart});
@@ -111,6 +107,41 @@ function Cart () {
         } else {
             alert(res.message);
             window.location.reload(false);
+        }
+    };
+
+    const paymentCart = async () => {
+        const carts = [];
+        for (let product of products) {
+            carts.push(product._id);
+        }
+        if (carts.length === 0) {
+            alert("Not have requesting payment");
+        } else {
+            const res = await PaymentCart({id, carts});
+            if (res.code >= 400 && res.message !== 'jwt expired') {
+                alert(res.message);
+            } else if (res.code >= 400 && res.message === 'jwt expired') {
+                const response = await RefreshToken();
+                if (response.code >= 400) {
+                    alert(response.message);
+                    localStorage.removeItem('accessToken');
+                    localStorage.removeItem('idUser');
+                    localStorage.removeItem('nameUser');
+                    localStorage.removeItem('role');
+                    Cookies.remove('refreshToken');
+                } else {
+                    const accessToken = response.accessToken;
+                    localStorage.setItem('accessToken', accessToken);
+                    const resp = await PaymentCart({id, carts});
+                    setError(false);
+                    alert(resp.message);
+                    window.location.reload(false);
+                }
+            } else {
+                alert(res.message);
+                window.location.reload(false);
+            }
         }
     };
 
@@ -219,22 +250,11 @@ function Cart () {
         <>
             <Navigation />
             <Container>
-                <Form className="d-flex justify-content-center" style={{margin: "auto"}}>
-                    <Form.Control
-                        style={{marginTop:"2px", width: "400px"}}
-                        value={key}
-                        type="search"
-                        placeholder="Search"
-                        className="me-2"
-                        aria-label="Search"
-                        onChange={e => setKey(e.target.value)}
-                    />
-                    <Button variant="dark" size="sm" onClick={searchBtn}>SEARCH</Button>
-                </Form>
                 <Button 
                     variant="warning" 
                     style={{width: "300px"}}
-                >ADD NEW USER
+                    onClick={() => paymentCart()}
+                >PAYMENT PRODUCTS
                 </Button>
                 <Row style={{borderBottom: "solid 2px"}}>
                     <Col xs={9} md={6}><p style={{fontWeight: "bold"}}>NAME</p></Col>

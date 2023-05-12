@@ -18,6 +18,8 @@ import User from './pages/User.js';
 import Admin from './pages/Admin.js';
 import NotFound from './pages/NotFound.js';
 import Cart from './pages/Cart.js';
+import Payment from './pages/Payment.js';
+import HistoryPayment from './pages/HistoryPayment.js';
 
 function App() {
   function ErrorHandler({error}) {
@@ -35,6 +37,8 @@ function App() {
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/user/cart/:id' element={<Cart />} />
+          <Route path='/user/payment/:id' element={<Payment />} />
+          <Route path='/user/history-payment/:id' element={<HistoryPayment />} />
           <Route path='/user/:id' element={<User />} />
           <Route path='/login' element={<Signin />} />
           <Route path='/register' element={<Signup />} />

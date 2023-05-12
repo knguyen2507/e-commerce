@@ -159,7 +159,7 @@ function Signup () {
                             onChange={e => setRepeatPassword(e.target.value)}
                         />
                         <span style={{marginLeft: "178px", fontSize: "15px"}}><a href="/login">I already have an account</a></span>
-                        <input style={button} type="submit" value="Login" />
+                        <input style={button} type="submit" value="Register" />
                     </form>
                 </div>
                 {errStatus ? ErrorMessage() : (status ? SuccessMessage() : true)}

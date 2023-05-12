@@ -15,6 +15,8 @@ import Product from './Admin/Product.js';
 import User from './Admin/User.js';
 import Category from './Admin/Category.js';
 import Brand from './Admin/Brand.js';
+import Payment from './Admin/Payment.js';
+import HistoryPayment from './Admin/HistoryPayment.js';
 // call api
 import { 
     GetAllBrands 
@@ -29,6 +31,10 @@ import {
     GetAllUsers,
     RefreshToken
 } from '../services/userAPI.js';
+import { 
+    GetAllPayments,
+    GetAllHistoryPayments 
+} from '../services/paymentAPI.js';
 
 const title = "Admin Page";
 
@@ -39,6 +45,8 @@ function Admin () {
     const [brands, setBrands] = useState([]);
     const [categories, setCategories] = useState([]);
     const [products, setProducts] = useState([]);
+    const [payments, setPayments] = useState([]);
+    const [historyPayments, setHistoryPayments] = useState([]);
     const [task, setTask] = useState('');
     const [errStatus, setErrStatus] = useState(false);
     const [errMsg, setErrMsg] = useState('');
@@ -98,6 +106,75 @@ function Admin () {
         getAllUsers();
     }, [])
 
+    useEffect(() => {
+        const getAllPayments = async () => {
+            const res = await GetAllPayments();
+            if (res.code >= 400 && res.message !== 'jwt expired') {
+                localStorage.removeItem('accessToken');
+                localStorage.removeItem('idUser');
+                localStorage.removeItem('nameUser');
+                localStorage.removeItem('role');
+                setErrStatus(true);
+                setErrMsg(res.message);
+            }
+            else if (res.code === 401 && res.message === 'jwt expired') {
+                const response = await RefreshToken();
+                if (response.code >= 400) {
+                    localStorage.removeItem('accessToken');
+                    localStorage.removeItem('idUser');
+                    localStorage.removeItem('nameUser');
+                    localStorage.removeItem('role');
+                    Cookies.remove('refreshToken');
+                    setErrStatus(true);
+                    setErrMsg(res.message);
+                } else {
+                    const accessToken = response.accessToken;
+                    localStorage.setItem('accessToken', accessToken);
+                    const responses = await GetAllPayments();
+                    setPayments(responses.metadata);
+                }
+            } else {
+                setPayments(res.metadata);
+            }
+        };
+        getAllPayments();
+    }, [])
+
+    useEffect(() => {
+        const getAllHistoryPayments = async () => {
+            const res = await GetAllHistoryPayments();
+            if (res.code >= 400 && res.message !== 'jwt expired') {
+                localStorage.removeItem('accessToken');
+                localStorage.removeItem('idUser');
+                localStorage.removeItem('nameUser');
+                localStorage.removeItem('role');
+                setErrStatus(true);
+                setErrMsg(res.message);
+            }
+            else if (res.code === 401 && res.message === 'jwt expired') {
+                const response = await RefreshToken();
+                if (response.code >= 400) {
+                    localStorage.removeItem('accessToken');
+                    localStorage.removeItem('idUser');
+                    localStorage.removeItem('nameUser');
+                    localStorage.removeItem('role');
+                    Cookies.remove('refreshToken');
+                    setErrStatus(true);
+                    setErrMsg(res.message);
+                } else {
+                    const accessToken = response.accessToken;
+                    localStorage.setItem('accessToken', accessToken);
+                    const responses = await GetAllHistoryPayments();
+                    setHistoryPayments(responses.metadata);
+                }
+            } else {
+                setHistoryPayments(res.metadata);
+            }
+        };
+        getAllHistoryPayments();
+    }, [])
+
+
     const btn_default = {
         width: "300px"
     };
@@ -107,18 +184,26 @@ function Admin () {
             <Container>
                 <Row>
                     <Col>
-                    <Button variant="primary" style={btn_default}>Total Users: {users.length}</Button>
+                        <Button variant="primary" style={btn_default}>Total Users: {users.length}</Button>
                     </Col>
                     <Col>
-                    <Button variant="success" style={btn_default}>Total Brands: {brands.length}</Button>
+                        <Button variant="success" style={btn_default}>Total Brands: {brands.length}</Button>
                     </Col>
                 </Row>
                 <Row>
                     <Col>
-                    <Button variant="info" style={btn_default}>Total Categories: {categories.length}</Button>
+                        <Button variant="info" style={btn_default}>Total Categories: {categories.length}</Button>
                     </Col>
                     <Col>
-                    <Button variant="warning" style={btn_default}>Total Products: {products.length}</Button>
+                        <Button variant="warning" style={btn_default}>Total Products: {products.length}</Button>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <Button variant="secondary" style={btn_default}>Total Payments: {payments.length}</Button>
+                    </Col>
+                    <Col>
+                        <Button variant="danger" style={btn_default}>Total History: {historyPayments.length}</Button>
                     </Col>
                 </Row>
             </Container>
@@ -147,8 +232,12 @@ function Admin () {
             setTask(<User users={users} />)
         } else if (task === 'Categories') {
             setTask(<Category categories={categories} />)
-        } else {
+        } else if (task === 'Brands') {
             setTask(<Brand brands={brands} />)
+        } else if (task === 'Payment') {
+            setTask(<Payment payments={payments} />)
+        } else {
+            setTask(<HistoryPayment historyPayments={historyPayments} />)
         }
     };
 
@@ -201,6 +290,16 @@ function Admin () {
                         <p style={colLeft}>
                             <a onClick={() => HandleTask('Categories')}><MDBIcon color='white' icon='layer-group' className='me-3' />
                                 Categories
+                            </a>
+                        </p>
+                        <p style={colLeft}>
+                            <a onClick={() => HandleTask('Payment')}><MDBIcon color='white' icon='layer-group' className='me-3' />
+                                Payment
+                            </a>
+                        </p>
+                        <p style={colLeft}>
+                            <a onClick={() => HandleTask('Payment History')}><MDBIcon color='white' icon='layer-group' className='me-3' />
+                                Payment History
                             </a>
                         </p>
                     </Col>
