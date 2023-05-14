@@ -1,7 +1,7 @@
 'use strict'
 
 const express = require('express');
-const multer = require('multer');
+const { upload } = require('../configs/config.storedFile');
 // controllers
 const { 
     getAllBrands,
@@ -20,26 +20,6 @@ const {
 } = require('../middlewares/jwt.middleware');
 
 const router = express.Router();
-
-const multerStorage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'public');
-    },
-    filename: (req, file, cb) => {
-        cb(null, `uploads/products/${file.originalname}`);
-    }
-});
-const multerFilter = (req, file, cb) => {
-    if (file.mimetype.split('/')[1] === 'jpeg') {
-        cb(null, true);
-    } else {
-        cb(new Error('Not a JPG File!!!'), false)
-    }
-}
-const upload = multer({
-    storage: multerStorage,
-    fileFilter: multerFilter
-});
 
 router.get('/get-all-brands', getAllBrands);
 router.post('/create-brand', 
